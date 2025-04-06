@@ -1,6 +1,7 @@
+# 原始数据
 maps_name_zh = ["万圣夜","梦境世界","辉针城","特殊"]
 maps_name_en = ["Halloween","Dream","Castle","Special"]
-maps_id = ["mvz2:halloween","mvz2:dream","mvz2:castle",None] 
+maps_id = ["mvz2:halloween","mvz2:dream","mvz2:castle","another"] 
 
 level_name_zh = ["测试关卡","教程关","序章","星之碎片教程关","驱动教程关"]
 level_name_en = ["debug","tutorial","prologue","starshard_tutorial","trigger_tutorial"]
@@ -22,3 +23,51 @@ musics_id = ['mvz2:mainmenu', 'mvz2:choosing', 'mvz2:day', 'mvz2:halloween', 'mv
 text_name_zh = ["MVZ2存档修改器 v1.2 by QoZnoS", "就绪", "保存文件", "当前用户：", "切换", "解压 (.dat/.lvl → .json)", "压缩 (.json → .lvl)", "当前文件：未选择", "选择文件", "切换界面", "制品名称", "添加", "删除", "蓝图名称", "修改", "当前文件：", "章节：", "关卡：", "旗数：", "波数：", "当前机械能：", "机械能上限：", "星之碎片数：", "星之碎片槽：", "启用传送带：", "传送带槽数：", "背景音乐：", "关于修改器", "是", "否", "已保存到：", "打开存档文件夹"]
 text_name_en = ["MVZ2SaveModifier v1.2 by QoZnoS", "Ready", "Execute the modification", "current user: ", "switch", "Decompress(.dat/.lvl → .json)", "Compress(.json → .lvl)", "current level: empty", "Select level file", "Another page", "Artifact name", "Add", "Delete", "Blueprint name", "Modify", "current level: ", "Chapter: ", "Day: ", "Flag: ", "Wave: ", "Energy: ", "maxEnergy: ", "Starshard: ", "maxStarshard: ", "ConveyorMode: ", "ConveyorSlot: ", "BGM: ", "About SaveModifier", "True", "False", "Save to: ", "View in Explorer"]
 text_id = ["title","status_ready","btn_save","label_user","btn_switch","btn_unzip","btn_zip","label_lvl_null","btn_lvl","btn_page","tree_artifact","btn_add","btn_delete","tree_blueprint","btn_modify","label_lvl","label_chapter","label_day","label_flag","label_wave","label_energy","label_maxEnergy","label_starshard","label_maxStarshard","label_conveyor","label_conveyorslot","label_bgm","btn_about","True","False","status_save","btn_open_explorer"]
+
+language = "zh"
+
+class BilingualDataset:
+    """双语数据集（ID↔名称双向查询）保留原始列表的同时构建索引"""
+    def __init__(self, ids, zh_names, en_names):
+        # 保留原始列表
+        self.ids = ids
+        self.zh_names = zh_names
+        self.en_names = en_names
+        
+        # 构建正向索引（ID为键）
+        self._by_id = {
+            id: {"zh": zh, "en": en} 
+            for id, zh, en in zip(ids, zh_names, en_names)
+        }
+        
+        # 构建反向索引（自动生成）
+        self._zh_to_id = {zh: id for zh, id in zip(zh_names, ids)}
+        self._en_to_id = {en: id for en, id in zip(en_names, ids)}
+    
+    def get_name(self, item_id, lang=language):
+        """通过ID获取名称 (默认返回中文)"""
+        return self._by_id.get(item_id, {}).get(lang)
+
+    def get_id(self, name):
+        """通过中文/英文名获取ID"""
+        return self._zh_to_id.get(name) or self._en_to_id.get(name)
+    
+    @property
+    def id_list(self):
+        """ID列表"""
+        return self.ids
+    
+    @property
+    def name_list(self):
+        """名称列表"""
+        if language=="zh":
+            return self.zh_names
+        if language=="en":
+            return self.en_names
+
+maps = BilingualDataset(maps_id, maps_name_zh, maps_name_en)
+levels = BilingualDataset(level_id, level_name_zh, level_name_en)
+artifacts = BilingualDataset(artifact_id, artifact_name_zh, artifact_name_en)
+blueprints = BilingualDataset(blueprint_id, blueprint_name_zh, blueprint_name_en)
+musics = BilingualDataset(musics_id, musics_name_zh, musics_name_en)
+texts = BilingualDataset(text_id, text_name_zh, text_name_en)

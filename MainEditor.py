@@ -2,15 +2,8 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk
 import gzip,shutil,os,json,winreg,subprocess
 import platform
-import CustonJson,Selector,NameData
+import CustonJson,Window,NameData
 
-level_day = NameData.level_day
-maps_id = NameData.maps_id
-level_id = NameData.level_id
-artifact_id = NameData.artifact_id
-blueprint_id = NameData.blueprint_id
-musics_id = NameData.musics_id
-text_id = NameData.text_id
 
 #region 全局函数
 def get_save_path():
@@ -40,37 +33,24 @@ def get_language():
     winreg.CloseKey(key)
 
     if value_data == b'en-US\x00':
-        set_language(False)
+        set_language("en")
     elif value_data == b'zh-Hans\x00':
-        set_language(True)
+        set_language("zh")
     else:
         choose_language()
 
-def set_language(is_zh):
-    global maps_name,artifact_name,blueprint_name,musics_name,text_name,level_name
-    if is_zh:
-        maps_name = NameData.maps_name_zh
-        level_name = NameData.level_name_zh
-        artifact_name = NameData.artifact_name_zh
-        blueprint_name = NameData.blueprint_name_zh
-        musics_name = NameData.musics_name_zh
-        text_name = NameData.text_name_zh
-    else:
-        maps_name = NameData.maps_name_en
-        level_name = NameData.level_name_en
-        artifact_name = NameData.artifact_name_en
-        blueprint_name = NameData.blueprint_name_en
-        musics_name = NameData.musics_name_en
-        text_name = NameData.text_name_en
+def set_language(lang):
+    if lang == "zh":
+        NameData.language = "zh"
+    if lang == "en":
+        NameData.language = "en"
 
 def choose_language():
-    Selector.LanguageSelector(on_select=set_language)
+    Window.LanguageSelector(on_select=set_language)
 
 def get_text(id):
     """获取文本"""
-    for text in text_id:
-        if id == text:
-            return text_name[text_id.index(id)]
+    return NameData.texts.get_name(id)
 
 def decompress(path):
     '''根据给定路径解压文件，返回解压后的文件'''
@@ -118,10 +98,6 @@ class ArchiveEditor:
         self.setup_tree_artifact_frame()
         self.setup_tree_blueprint_frame()
         self.setup_numeric_group_frame()
-
-        # JSON 编辑区
-        # self.text_editor = scrolledtext.ScrolledText(self.root, width=60, height=20)
-        # self.text_editor.pack(pady=10, padx=10)
 
         # 状态栏
         self.status = tk.StringVar()
@@ -172,7 +148,7 @@ class ArchiveEditor:
         # 相关控件
         artifact_control_frame = tk.Frame(frame_artifact)
         artifact_control_frame.pack(side=tk.RIGHT, padx=10)
-        self.artifact_box = ttk.Combobox(artifact_control_frame, values=artifact_name, state="disabled", width=18)
+        self.artifact_box = ttk.Combobox(artifact_control_frame, values=NameData.artifacts.name_list, state="disabled", width=18)
         self.artifact_box.pack(pady=(0, 12))
         tk.Button(artifact_control_frame, text=get_text("btn_add"), width=8, command=self.add_artifact).pack(fill=tk.X, pady=12)
         tk.Button(artifact_control_frame, text=get_text("btn_delete"), width=8, command=self.remove_artifact).pack(fill=tk.X, pady=12)
@@ -190,7 +166,7 @@ class ArchiveEditor:
         # 相关控件
         blueprint_control_frame = tk.Frame(frame_blueprint)
         blueprint_control_frame.pack(side=tk.RIGHT, padx=10)
-        self.blueprint_box = ttk.Combobox(blueprint_control_frame, values=blueprint_name, state="disabled", width=20)
+        self.blueprint_box = ttk.Combobox(blueprint_control_frame, values=NameData.blueprints.name_list, state="disabled", width=20)
         self.blueprint_box.pack(pady=(0, 12))
         # tk.Button(blueprint_control_frame, text="添加", width=8).pack(fill=tk.X, pady=12)
         tk.Button(blueprint_control_frame, text=get_text("btn_modify"), width=8, command=self.modify_blueprint).pack(fill=tk.X, pady=12)
@@ -200,12 +176,12 @@ class ArchiveEditor:
         frame_group = tk.Frame(self.frame_numeric)
         frame_group.pack(side=tk.LEFT, padx=10, expand=True)
         tk.Label(frame_group, text=get_text("label_chapter")).grid(row=0, column=0, sticky="e", pady=12)
-        self.numeric_stageDefinition_box = ttk.Combobox(frame_group,values=maps_name,state="disable",width=16)
+        self.numeric_stageDefinition_box = ttk.Combobox(frame_group,values=NameData.maps.name_list,state="disable",width=16)
         self.numeric_stageDefinition_box.grid(row=0, column=1, sticky="ew", pady=12)
         self.numeric_stageDefinition_box.set("")
         self.numeric_stageDefinition_box.bind("<<ComboboxSelected>>",self.mix_stageDefinitionID)
         tk.Label(frame_group, text=get_text("label_day")).grid(row=1, column=0, sticky="e", pady=12)
-        self.numeric_stageDefinitionID_box = ttk.Combobox(frame_group,values=level_day,state="disable",width=16)
+        self.numeric_stageDefinitionID_box = ttk.Combobox(frame_group,values=NameData.level_day,state="disable",width=16)
         self.numeric_stageDefinitionID_box.grid(row=1, column=1, sticky="ew", pady=12)
         self.numeric_stageDefinitionID_box.set("")
         self.numeric_stageDefinitionID_box.bind("<<ComboboxSelected>>",self.mix_stageDefinitionID)
@@ -236,7 +212,7 @@ class ArchiveEditor:
         self.numeric_conveyorSlotCount_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_conveyorSlotCount, validate='key',validatecommand=(self.root.register(self.change_conveyorSlotCount), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_conveyorSlotCount_input.grid(row=1, column=5, sticky="ew", pady=12)
         tk.Label(frame_group, text=get_text("label_bgm")).grid(row=2, column=4, sticky="e", pady=12)
-        self.numeric_musicID_box = ttk.Combobox(frame_group,values=musics_name,state="disable",width=16)
+        self.numeric_musicID_box = ttk.Combobox(frame_group,values=NameData.musics.name_list,state="disable",width=16)
         self.numeric_musicID_box.grid(row=2, column=5, sticky="ew", pady=12)
         self.numeric_musicID_box.set("")
         self.numeric_musicID_box.bind("<<ComboboxSelected>>",self.change_musicID)
@@ -244,12 +220,11 @@ class ArchiveEditor:
 
     # endregion
 
-    # region 响应回调
     # region 窗口
     # 处理文件窗口
     def open_save_selector(self):
         """打开存档选择窗口"""
-        Selector.SaveFileSelector(
+        Window.SaveFileSelector(
             parent=self.root,
             save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex)),
             on_select=self.handle_save_selected  # 关键：选择后的回调
@@ -269,7 +244,7 @@ class ArchiveEditor:
     # 处理用户窗口
     def open_user_selector(self):
         """打开用户选择窗口"""
-        Selector.UserSelector(
+        Window.UserSelector(
             parent=self.root,
             metas=self.users['metas'],
             on_select=self.handle_user_selected
@@ -281,6 +256,8 @@ class ArchiveEditor:
         self.username = self.users['metas'][self.currentUserIndex]['username']
         self.username_label.config(text=get_text("label_user") + self.username)
     # endregion
+
+    # region 响应回调
     # region tree_frame
     # 添加制品
     def add_artifact(self):
@@ -288,7 +265,7 @@ class ArchiveEditor:
             return
         # 制品模板
         new_artifact = { 
-            "definitionID":artifact_id[artifact_name.index(self.artifact_box.get())],
+            "definitionID":NameData.artifacts.get_id(self.artifact_box.get()),
             "propertyDict": {
                 "properties": {}
             },
@@ -333,7 +310,7 @@ class ArchiveEditor:
         if not self.blueprint_tree.selection():
             return
         selected = self.blueprint_tree.item(self.blueprint_tree.selection()[0])["values"][0]
-        self.current_data['level']['seedPacks'][selected]['seedID']=blueprint_id[blueprint_name.index(self.blueprint_box.get())]
+        self.current_data['level']['seedPacks'][selected]['seedID']=NameData.blueprints.get_id(self.blueprint_box.get())
         if len(self.current_data['level']['seedPacks'][selected]['auras'])==0:
             self.current_data['level']['seedPacks'][selected]['auras'].append(
                     {
@@ -356,19 +333,19 @@ class ArchiveEditor:
     # 混乱
     def mix_stageDefinitionID(self,event):
         """处理混乱"""
-        mapID = maps_name.index(self.numeric_stageDefinition_box.get())
-        isSpecial = (level_day.count(self.numeric_stageDefinitionID_box.get())==0)
-        if (mapID != 3):
-            if (isSpecial):
-                self.numeric_stageDefinitionID_box.config(values=level_day)
-                self.numeric_stageDefinitionID_box.set(level_day[0])
-            self.current_data['level']['stageDefinitionID'] = maps_id[mapID] + "_" + self.numeric_stageDefinitionID_box.get()
+        mapID = NameData.maps.get_id(self.numeric_stageDefinition_box.get())
+        level = self.numeric_stageDefinitionID_box.get()
+        isSpecial = (NameData.level_day.count(level)==0)
+        if (mapID != "another"):
+            if isSpecial:
+                self.numeric_stageDefinitionID_box.config(values=NameData.level_day)
+                self.numeric_stageDefinitionID_box.set(NameData.level_day[0])
+            self.current_data['level']['stageDefinitionID'] = mapID + "_" + level
         else:
-            if (not isSpecial):
-                self.numeric_stageDefinitionID_box.config(values=level_name)
-                self.numeric_stageDefinitionID_box.set(level_name[0])
-            self.current_data['level']['stageDefinitionID'] = level_id[level_name.index(self.numeric_stageDefinitionID_box.get())]
-
+            if not isSpecial:
+                self.numeric_stageDefinitionID_box.config(values=NameData.levels.name_list)
+                self.numeric_stageDefinitionID_box.set(NameData.levels.name_list[0])
+            self.current_data['level']['stageDefinitionID'] = NameData.levels.get_id(level)
     # 旗数
     def change_flag(self, action, index, value, prior_value, text, validation_type, trigger_type):
         if value=="":
@@ -444,13 +421,11 @@ class ArchiveEditor:
         return False
     # 背景音乐
     def change_musicID(self,event):
-        self.current_data['musicID'] = musics_id[musics_name.index(self.numeric_musicID_box.get())]
+        self.current_data['musicID'] = NameData.musics.get_id(self.numeric_musicID_box.get())
     # 关于
     def open_about(self):
-        Selector.AboutWindow(self.root)
+        Window.AboutWindow(self.root)
 
-
-    # endregion
     # 保存文件
     def output_file(self):
         save_dir=get_save_path() + "/user%d/mvz2/level/"%(self.currentUserIndex) + os.path.basename(self.current_file)
@@ -472,7 +447,8 @@ class ArchiveEditor:
     def open_save_explorer(self):
         save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex))
         subprocess.run(f'explorer "{os.path.normpath(save_dir)}"', shell=True)
-    #endregion
+    # endregion
+    # endregion
 
     # region 工具
     def get_usersdata(self):
@@ -519,9 +495,9 @@ class ArchiveEditor:
     def refresh(self):
         """刷新界面"""
         self.artifact_box.config(state="readonly")
-        self.artifact_box.set(artifact_name[0])
+        self.artifact_box.set(NameData.artifacts.name_list[0])
         self.blueprint_box.config(state="readonly")
-        self.blueprint_box.set(blueprint_name[0])
+        self.blueprint_box.set(NameData.blueprints.name_list[0])
         self.output_btn.config(state="normal")
         self.refresh_artifact()
         self.refresh_blueprint()
@@ -533,7 +509,7 @@ class ArchiveEditor:
         self.artifact_tree.delete(*self.artifact_tree.get_children())
         for i in range(len(data_artifact)):
             if data_artifact[i]:
-                self.artifact_tree.insert("", "end", values=(i, artifact_name[artifact_id.index(data_artifact[i]['definitionID'])]))
+                self.artifact_tree.insert("", "end", values=(i, NameData.artifacts.get_name(data_artifact[i]['definitionID'])))
 
     def refresh_blueprint(self):
         """刷新蓝图列表"""
@@ -541,7 +517,7 @@ class ArchiveEditor:
         self.blueprint_tree.delete(*self.blueprint_tree.get_children())
         for i in range(len(data_blueprint)):
             if data_blueprint[i]:
-                self.blueprint_tree.insert("", "end", values=(i, blueprint_name[blueprint_id.index(data_blueprint[i]['seedID'])]))
+                self.blueprint_tree.insert("", "end", values=(i, NameData.blueprints.get_name(data_blueprint[i]['seedID'])))
 
     def refresh_numeric(self):
         self.refresh_numeric_map_box()
@@ -563,18 +539,19 @@ class ArchiveEditor:
         self.numeric_conveyorSlotCount_input.config(state="normal")
         self.data_conveyorSlotCount.set(self.current_data['level']['conveyorSlotCount'])
         self.numeric_musicID_box.config(state="readonly")
-        self.numeric_musicID_box.set(musics_name[musics_id.index(self.current_data['musicID'])])
+        self.numeric_musicID_box.set(NameData.musics.get_name(self.current_data['musicID']))
 
     def refresh_numeric_map_box(self):
         self.numeric_stageDefinition_box.config(state="readonly")
         self.numeric_stageDefinitionID_box.config(state="readonly")
-        if not (level_id.count(self.current_data['level']['stageDefinitionID'])==0):
-            self.numeric_stageDefinitionID_box.config(values=level_name)
-            self.numeric_stageDefinitionID_box.set(level_name[level_id.index(self.current_data['level']['stageDefinitionID'])])
-            self.numeric_stageDefinition_box.set(maps_name[3])
+        stageDefinitionID = self.current_data['level']['stageDefinitionID']
+        if (NameData.levels.id_list.count(stageDefinitionID)!=0):
+            self.numeric_stageDefinitionID_box.config(values=NameData.levels.name_list)
+            self.numeric_stageDefinitionID_box.set(NameData.levels.get_name(stageDefinitionID))
+            self.numeric_stageDefinition_box.set("another")
         else:
-            self.numeric_stageDefinition_box.set(maps_name[maps_id.index(self.current_data['level']['stageDefinitionID'].split("_")[0])])
-            self.numeric_stageDefinitionID_box.set(self.current_data['level']['stageDefinitionID'].split("_")[1])
+            self.numeric_stageDefinition_box.set(NameData.maps.get_name(stageDefinitionID.split("_")[0]))
+            self.numeric_stageDefinitionID_box.set(stageDefinitionID.split("_")[1])
 
     def refresh_boolean_box(self, data, box):
         box.config(state="readonly")
