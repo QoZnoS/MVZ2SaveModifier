@@ -4,7 +4,6 @@ import gzip,shutil,os,json,winreg,subprocess
 import platform
 import CustonJson,Window,NameData
 
-
 #region 全局函数
 def get_save_path():
     '''根据系统返回userdata路径'''
@@ -143,48 +142,71 @@ class ArchiveEditor:
     def setup_numeric_group_frame(self):
         frame_group = tk.Frame(self.frame_numeric)
         frame_group.pack(side=tk.LEFT, padx=10, expand=True)
+        # 章节
         tk.Label(frame_group, text=get_text("label_chapter")).grid(row=0, column=0, sticky="e", pady=12)
         self.numeric_stageDefinition_box = ttk.Combobox(frame_group,values=NameData.maps.name_list,state="disable",width=16)
         self.numeric_stageDefinition_box.grid(row=0, column=1, sticky="ew", pady=12)
-        self.numeric_stageDefinition_box.set("")
         self.numeric_stageDefinition_box.bind("<<ComboboxSelected>>",self.mix_stageDefinitionID)
+        # 关卡
         tk.Label(frame_group, text=get_text("label_day")).grid(row=1, column=0, sticky="e", pady=12)
         self.numeric_stageDefinitionID_box = ttk.Combobox(frame_group,values=NameData.level_day,state="disable",width=16)
         self.numeric_stageDefinitionID_box.grid(row=1, column=1, sticky="ew", pady=12)
-        self.numeric_stageDefinitionID_box.set("")
         self.numeric_stageDefinitionID_box.bind("<<ComboboxSelected>>",self.mix_stageDefinitionID)
+        # 旗帜
         tk.Label(frame_group, text=get_text("label_flag")).grid(row=2, column=0, sticky="e", pady=12)
         self.numeric_flag_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_flag, validate='key',validatecommand=(self.root.register(self.change_flag), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_flag_input.grid(row=2, column=1, sticky="ew", pady=12)
+        # 波数
         tk.Label(frame_group, text=get_text("label_wave")).grid(row=3, column=0, sticky="e", pady=12)
         self.numeric_wave_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_wave, validate='key',validatecommand=(self.root.register(self.change_wave), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_wave_input.grid(row=3, column=1, sticky="ew", pady=12)
+        # 当前机械能
         tk.Label(frame_group, text=get_text("label_energy")).grid(row=0, column=2, sticky="e", pady=12)
         self.numeric_energy_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_energy, validate='key',validatecommand=(self.root.register(self.change_energy), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_energy_input.grid(row=0, column=3, sticky="ew", pady=12)
+        # 机械能上限
         tk.Label(frame_group, text=get_text("label_maxEnergy")).grid(row=1, column=2, sticky="e", pady=12)
         self.numeric_maxEnergy_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_maxEnergy, validate='key',validatecommand=(self.root.register(self.change_maxEnergy), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_maxEnergy_input.grid(row=1, column=3, sticky="ew", pady=12)
+        # 星之碎片数
         tk.Label(frame_group, text=get_text("label_starshard")).grid(row=2, column=2, sticky="e", pady=12)
         self.numeric_starshardCount_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_starshardCount, validate='key',validatecommand=(self.root.register(self.change_starshardCount), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_starshardCount_input.grid(row=2, column=3, sticky="ew", pady=12)
+        # 星之碎片槽
         tk.Label(frame_group, text=get_text("label_maxStarshard")).grid(row=3, column=2, sticky="e", pady=12)
         self.numeric_starshardSlotCount_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_starshardSlotCount, validate='key',validatecommand=(self.root.register(self.change_starshardSlotCount), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_starshardSlotCount_input.grid(row=3, column=3, sticky="ew", pady=12)
+        # 启用传送带
         tk.Label(frame_group, text=get_text("label_conveyor")).grid(row=0, column=4, sticky="e", pady=12)
         self.numeric_isConveyorMode_box = ttk.Combobox(frame_group,values=[get_text("True"),get_text("False")],state="disable",width=16)
         self.numeric_isConveyorMode_box.grid(row=0, column=5, sticky="ew", pady=12)
-        self.numeric_isConveyorMode_box.set("")
         self.numeric_isConveyorMode_box.bind("<<ComboboxSelected>>",self.is_ConveyorMode)
+        # 传送带槽数
         tk.Label(frame_group, text=get_text("label_conveyorslot")).grid(row=1, column=4, sticky="e", pady=12)
         self.numeric_conveyorSlotCount_input = ttk.Entry(frame_group, state="disable", textvariable=self.data_conveyorSlotCount, validate='key',validatecommand=(self.root.register(self.change_conveyorSlotCount), '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
         self.numeric_conveyorSlotCount_input.grid(row=1, column=5, sticky="ew", pady=12)
+        # 背景音乐
         tk.Label(frame_group, text=get_text("label_bgm")).grid(row=2, column=4, sticky="e", pady=12)
         self.numeric_musicID_box = ttk.Combobox(frame_group,values=NameData.musics.name_list,state="disable",width=16)
         self.numeric_musicID_box.grid(row=2, column=5, sticky="ew", pady=12)
-        self.numeric_musicID_box.set("")
         self.numeric_musicID_box.bind("<<ComboboxSelected>>",self.change_musicID)
-        tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=3,column=4,columnspan=2,ipadx=32)
+        # 自动收集
+        tk.Label(frame_group, text=get_text("label_autoCollect")).grid(row=0, column=6, sticky="e", pady=12)
+        self.numeric_autoCollect_box = ttk.Combobox(frame_group,values=[get_text("True"),get_text("False")],state="disable",width=16)
+        self.numeric_autoCollect_box.grid(row=0, column=7, sticky="ew", pady=12)
+        self.numeric_autoCollect_box.bind("<<ComboboxSelected>>",self.is_aotuCollect)
+        # 蓝图无冷却
+        tk.Label(frame_group, text=get_text("label_recharge")).grid(row=1, column=6, sticky="e", pady=12)
+        self.numeric_recharge_box = ttk.Combobox(frame_group,values=[get_text("True"),get_text("False")],state="disable",width=16)
+        self.numeric_recharge_box.grid(row=1, column=7, sticky="ew", pady=12)
+        self.numeric_recharge_box.bind("<<ComboboxSelected>>",self.change_rechargeSpeed)
+        # 忽略大波事件
+        tk.Label(frame_group, text=get_text("label_ignoreHugeWaveEvent")).grid(row=2, column=6, sticky="e", pady=12)
+        self.numeric_ignoreHugeWaveEvent_box = ttk.Combobox(frame_group,values=[get_text("True"),get_text("False")],state="disable",width=16)
+        self.numeric_ignoreHugeWaveEvent_box.grid(row=2, column=7, sticky="ew", pady=12)
+        self.numeric_ignoreHugeWaveEvent_box.bind("<<ComboboxSelected>>",self.is_ignoreHugeWaveEvent)
+
+        tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=3,column=4,columnspan=4,ipadx=64)
 
     # endregion
 
@@ -226,6 +248,29 @@ class ArchiveEditor:
     # endregion
 
     # region 响应回调
+    # region user/file frame
+    # 保存文件
+    def output_file(self):
+        save_dir=get_save_path() + "/user%d/mvz2/level/"%(self.currentUserIndex) + os.path.basename(self.current_file)
+        output=json.dumps(self.current_data,cls=CustonJson.CustomEncoder).encode("utf-8")
+        self.status.set(get_text("status_save") + save_dir)
+        compress(save_dir,output)
+    # 切换界面
+    def switch_frame(self):
+        if self.page:
+            self.page=0
+            self.frame_tree.pack_forget()
+            self.setup_numeric_frame()
+        else:
+            self.page=1
+            self.frame_numeric.pack_forget()
+            self.setup_tree_frame()
+            # self.refresh()
+    # 打开存档文件夹
+    def open_save_explorer(self):
+        save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex))
+        subprocess.run(f'explorer "{os.path.normpath(save_dir)}"', shell=True)
+    # endregion
     # region tree_frame
     # 添加制品
     def add_artifact(self):
@@ -390,31 +435,21 @@ class ArchiveEditor:
     # 背景音乐
     def change_musicID(self,event):
         self.current_data['musicID'] = NameData.musics.get_id(self.numeric_musicID_box.get())
+    # 自动收集
+    def is_aotuCollect(self,event):
+        self.current_data['level']['properties']['autoCollect'] = (self.numeric_autoCollect_box.get()==get_text("True"))
+    # 蓝图无冷却
+    def change_rechargeSpeed(self,event):
+        if (self.numeric_recharge_box.get()==get_text("True")):
+            self.current_data['level']['rechargeSpeed'] = 15532.0
+        else:
+            self.current_data['level']['rechargeSpeed'] = 1.0
+    # 忽略大波事件
+    def is_ignoreHugeWaveEvent(self,event):
+        self.current_data['level']['properties']['ignoreHugeWaveEvent'] = (self.numeric_ignoreHugeWaveEvent_box.get()==get_text("True"))
     # 关于
     def open_about(self):
         Window.AboutWindow(self.root)
-
-    # 保存文件
-    def output_file(self):
-        save_dir=get_save_path() + "/user%d/mvz2/level/"%(self.currentUserIndex) + os.path.basename(self.current_file)
-        output=json.dumps(self.current_data,cls=CustonJson.CustomEncoder).encode("utf-8")
-        self.status.set(get_text("status_save") + save_dir)
-        compress(save_dir,output)
-    # 切换界面
-    def switch_frame(self):
-        if self.page:
-            self.page=0
-            self.frame_tree.pack_forget()
-            self.setup_numeric_frame()
-        else:
-            self.page=1
-            self.frame_numeric.pack_forget()
-            self.setup_tree_frame()
-            # self.refresh()
-    # 打开存档文件夹
-    def open_save_explorer(self):
-        save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex))
-        subprocess.run(f'explorer "{os.path.normpath(save_dir)}"', shell=True)
     # endregion
     # endregion
 
@@ -508,6 +543,13 @@ class ArchiveEditor:
         self.data_conveyorSlotCount.set(self.current_data['level']['conveyorSlotCount'])
         self.numeric_musicID_box.config(state="readonly")
         self.numeric_musicID_box.set(NameData.musics.get_name(self.current_data['musicID']))
+        if not ('autoCollect' in self.current_data['level']['properties']):
+            self.current_data['level']['properties']['autoCollect']=False
+        self.refresh_boolean_box(self.current_data['level']['properties']['autoCollect'], self.numeric_autoCollect_box)
+        self.refresh_boolean_box((self.current_data['level']['rechargeSpeed'] == 1.0), self.numeric_recharge_box)
+        if not ('ignoreHugeWaveEvent' in self.current_data['level']['properties']):
+            self.current_data['level']['properties']['ignoreHugeWaveEvent']=False
+        self.refresh_boolean_box(self.current_data['level']['properties']['ignoreHugeWaveEvent'], self.numeric_ignoreHugeWaveEvent_box)
 
     def refresh_numeric_map_box(self):
         self.numeric_stageDefinition_box.config(state="readonly")
@@ -531,7 +573,6 @@ class ArchiveEditor:
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")
-    NameData.get_language()
     root = tk.Tk()
     app = ArchiveEditor(root)
     root.mainloop()

@@ -230,15 +230,15 @@ Choose your language/请选择语言
 
         btnframe = tk.Frame(container)
         btnframe.pack()
-        tk.Button(btnframe, text="English", command=lambda:self.on_close(False)).pack(side=tk.LEFT, padx=5)
-        tk.Button(btnframe, text="简体中文", command=lambda:self.on_close(True)).pack(side=tk.LEFT, padx=5)
+        tk.Button(btnframe, text="English", command=lambda:self.on_close("en")).pack(side=tk.LEFT, padx=5)
+        tk.Button(btnframe, text="简体中文", command=lambda:self.on_close("zh")).pack(side=tk.LEFT, padx=5)
         # 窗口关闭时退出程序
-        self.selector.protocol("WM_DELETE_WINDOW", lambda:self.on_close(True))
+        self.selector.protocol("WM_DELETE_WINDOW", lambda:self.on_close('zh'))
         
         # 等待用户选择
         self.root.wait_window(self.selector)
 
-    def on_close(self, is_zh):
-        self.on_select(is_zh)
+    def on_close(self, lang):
+        self.on_select(lang)
         self.selector.destroy()
         self.root.destroy()
