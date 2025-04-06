@@ -16,38 +16,6 @@ def get_save_path():
     else:  # Linux
         return os.path.expanduser("~/.config/unity3d/Cuerzor/MinecraftVSZombies2/userdata")
 
-def get_language():
-    key_path = r"Software\\Cuerzor\\MinecraftVSZombies2"
-
-    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,key_path,0,winreg.KEY_READ)
-    i = 0
-    while True:
-        try:
-            name, value, _ = winreg.EnumValue(key, i)
-            if name.startswith("Language"):
-                value_data=value
-                break
-            i+=1
-        except OSError:
-            break
-    winreg.CloseKey(key)
-
-    if value_data == b'en-US\x00':
-        set_language("en")
-    elif value_data == b'zh-Hans\x00':
-        set_language("zh")
-    else:
-        choose_language()
-
-def set_language(lang):
-    if lang == "zh":
-        NameData.language = "zh"
-    if lang == "en":
-        NameData.language = "en"
-
-def choose_language():
-    Window.LanguageSelector(on_select=set_language)
-
 def get_text(id):
     """获取文本"""
     return NameData.texts.get_name(id)
@@ -563,7 +531,7 @@ class ArchiveEditor:
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")
-    get_language()
+    NameData.get_language()
     root = tk.Tk()
     app = ArchiveEditor(root)
     root.mainloop()

@@ -71,3 +71,38 @@ artifacts = BilingualDataset(artifact_id, artifact_name_zh, artifact_name_en)
 blueprints = BilingualDataset(blueprint_id, blueprint_name_zh, blueprint_name_en)
 musics = BilingualDataset(musics_id, musics_name_zh, musics_name_en)
 texts = BilingualDataset(text_id, text_name_zh, text_name_en)
+
+import winreg,Window
+
+def get_language():
+    key_path = r"Software\\Cuerzor\\MinecraftVSZombies2"
+
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,key_path,0,winreg.KEY_READ)
+    i = 0
+    while True:
+        try:
+            name, value, _ = winreg.EnumValue(key, i)
+            if name.startswith("Language"):
+                value_data=value
+                break
+            i+=1
+        except OSError:
+            break
+    winreg.CloseKey(key)
+
+    if value_data == b'en-US\x00':
+        set_language("en")
+    elif value_data == b'zh-Hans\x00':
+        set_language("zh")
+    else:
+        choose_language()
+
+def set_language(lang):
+    global language
+    if lang == "zh":
+        language = "zh"
+    if lang == "en":
+        language = "en"
+
+def choose_language():
+    Window.LanguageSelector(on_select=set_language)
