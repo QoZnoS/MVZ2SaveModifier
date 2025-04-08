@@ -1,7 +1,6 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, ttk
-import gzip,shutil,os,json,winreg,subprocess
-import platform
+from tkinter import filedialog, messagebox, ttk
+import gzip,shutil,os,json,subprocess,platform
 import CustonJson,Window,NameData
 
 #region 全局函数
