@@ -546,7 +546,7 @@ class ArchiveEditor:
         if not ('autoCollect' in self.current_data['level']['properties']):
             self.current_data['level']['properties']['autoCollect']=False
         self.refresh_boolean_box(self.current_data['level']['properties']['autoCollect'], self.numeric_autoCollect_box)
-        self.refresh_boolean_box((self.current_data['level']['rechargeSpeed'] == 1.0), self.numeric_recharge_box)
+        self.refresh_boolean_box((self.current_data['level']['rechargeSpeed'] != 1.0), self.numeric_recharge_box)
         if not ('ignoreHugeWaveEvent' in self.current_data['level']['properties']):
             self.current_data['level']['properties']['ignoreHugeWaveEvent']=False
         self.refresh_boolean_box(self.current_data['level']['properties']['ignoreHugeWaveEvent'], self.numeric_ignoreHugeWaveEvent_box)
