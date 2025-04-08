@@ -95,7 +95,7 @@ class ArchiveEditor:
         try:
             self.datahandler.current_data = json.loads(decompress(selected_path).decode("utf-8"),cls=CustonJson.CustomDecoder)
             self.filename_label.config(text=get_text("label_lvl") + os.path.basename(selected_path))
-            self.refresh()
+            self.output_btn.config(state="normal")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load file:\n{str(e)}")
     # 处理用户窗口
@@ -162,12 +162,6 @@ class ArchiveEditor:
             self.status.set(f"Output: {os.path.basename(file_path)}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to compress: {str(e)}")
-
-    # region 刷新，获取关卡数据
-    def refresh(self):
-        """刷新界面"""
-        self.output_btn.config(state="normal")
-    # endregion
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")
