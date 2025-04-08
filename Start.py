@@ -37,6 +37,7 @@ class ArchiveEditor:
         self.root = root
         self.root.title(get_text("title"))
 
+        self.archive = ttk.Notebook(self.root)
         self.datahandler = Editor.DataHandler()
 
         self.get_usersdata() # 自动读取存档
@@ -46,10 +47,11 @@ class ArchiveEditor:
         self.setup_user_frame()
         self.setup_file_frame()
 
-        self.artifact_blueprint_editor = Editor.Artifact_Blueprint_Editor(self.root,self.datahandler)
+        self.numeric_editor = Editor.Numeric_Editor(self.archive,self.datahandler)
+        self.artifact_blueprint_editor = Editor.Artifact_Blueprint_Editor(self.archive,self.datahandler)
 
-        self.archive = ttk.Notebook(self.root)
         self.archive.pack(fill='both', expand=True)
+        self.archive.add(self.numeric_editor.frame, text="基础编辑器")
         self.archive.add(self.artifact_blueprint_editor.frame, text="蓝图/制品")
 
         # 状态栏
@@ -96,6 +98,7 @@ class ArchiveEditor:
             self.datahandler.current_data = json.loads(decompress(selected_path).decode("utf-8"),cls=CustonJson.CustomDecoder)
             self.filename_label.config(text=get_text("label_lvl") + os.path.basename(selected_path))
             self.output_btn.config(state="normal")
+            self.refresh()
         except Exception as e:
             messagebox.showerror("Error", f"Failed to load file:\n{str(e)}")
     # 处理用户窗口
@@ -112,7 +115,6 @@ class ArchiveEditor:
         self.currentUserIndex = selected_user
         self.username = self.users['metas'][self.currentUserIndex]['username']
         self.username_label.config(text=get_text("label_user") + self.username)
-
     # 保存文件
     def output_file(self):
         save_dir=get_save_path() + "/user%d/mvz2/level/"%(self.currentUserIndex) + os.path.basename(self.current_file)
@@ -162,6 +164,9 @@ class ArchiveEditor:
             self.status.set(f"Output: {os.path.basename(file_path)}")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to compress: {str(e)}")
+    # 刷新
+    def refresh(self):
+        self.artifact_blueprint_editor.refresh()
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")
