@@ -8,7 +8,7 @@ def get_save_path():
     '''根据系统返回userdata路径'''
     system = platform.system()
     if system == "Windows":
-        return os.path.expandvars(r"%HOMEPATH%/AppData/LocalLow/Cuerzor/MinecraftVSZombies2/userdata")
+        return os.path.expandvars(r"%HOMEPATH%\\AppData\\LocalLow\\Cuerzor\\MinecraftVSZombies2\\userdata")
     elif system == "Darwin":  # macOS
         return os.path.expanduser("~/Library/Application Support/Cuerzor/MinecraftVSZombies2/userdata")
     else:  # Linux
@@ -95,6 +95,7 @@ class ArchiveEditor:
     def handle_save_selected(self, selected_path):
         """处理选择的存档"""
         try:
+            self.current_file = selected_path
             self.datahandler.current_data = json.loads(decompress(selected_path).decode("utf-8"),cls=CustonJson.CustomDecoder)
             self.filename_label.config(text=get_text("label_lvl") + os.path.basename(selected_path))
             self.output_btn.config(state="normal")
@@ -167,6 +168,7 @@ class ArchiveEditor:
     # 刷新
     def refresh(self):
         self.artifact_blueprint_editor.refresh()
+        self.numeric_editor.refresh()
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")

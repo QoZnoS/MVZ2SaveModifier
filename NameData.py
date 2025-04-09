@@ -20,10 +20,6 @@ _musics_name_zh = ['疯狂戴夫', '选择你的种子', '草地行走', '莱克
 _musics_name_en = ["Crazy Dave", "Choose Your Seeds", "Grasswalk", "Lexonomicon Level", "Lexonomicon Map", "Loon Boon","Utimate Battle", "Lexonomicon Boss", "Fractured Fairytales Level", "Fractured Fairytales Map", "Suspension", "The Binding of Isaac", "Repentant", "The Mysterious Shrine Maiden Flying Through", "Pandemonic Planet (1st part)", "Pandemonic Planet (2nd part)", "A Shadow in the Blue Sky","Fading Echoes of Memory","The Shining Needle Castle Sinking to the Void", "Witherstep", "Zombies in your phone", "Reverse Ideology", "The Exacerbated Castle Keep", "Inchlings of the Shining Needle ~ Little Princess", "Astounding Planet Boss"]
 _musics_id = ['mvz2:mainmenu', 'mvz2:choosing', 'mvz2:day', 'mvz2:halloween', 'mvz2:halloween_map', 'mvz2:minigame', 'mvz2:ultimate_battle', 'mvz2:halloween_boss', 'mvz2:dream_level', 'mvz2:dream_map', 'mvz2:suspension', 'mvz2:nightmare_map', 'mvz2:nightmare_level', 'mvz2:nightmare_final', 'mvz2:nightmare_boss', 'mvz2:nightmare_boss2', 'mvz2:gensokyo_map', 'mvz2:distress', 'mvz2:castle_map', 'mvz2:castle_level', 'mvz2:phone_ring', 'mvz2:seija', 'mvz2:sad_shinmyoumaru', 'mvz2:castle_final', 'mvz2:wither_boss']
 
-_text_name_zh = ["MVZ2存档修改器 v1.3.1 by QoZnoS", "就绪", "保存文件", "当前用户：", "切换", "解压 (.dat/.lvl → .json)", "压缩 (.json → .lvl)", "当前文件：未选择", "选择文件", "切换界面", "制品名称", "添加", "删除", "蓝图名称", "修改", "当前文件：", "章节：", "关卡：", "旗数：", "波数：", "当前机械能：", "机械能上限：", "星之碎片数：", "星之碎片槽：", "启用传送带：", "传送带槽数：", "背景音乐：", "关于修改器", "是", "否", "已保存到：", "打开存档文件夹", "自动收集", "蓝图无冷却", "忽略大波事件"]
-_text_name_en = ["MVZ2SaveModifier v1.3.1 by QoZnoS", "Ready", "Execute the modification", "current user: ", "switch", "Decompress(.dat/.lvl → .json)", "Compress(.json → .lvl)", "current level: empty", "Select level file", "Another page", "Artifact name", "Add", "Delete", "Blueprint name", "Modify", "current level: ", "Chapter: ", "Day: ", "Flag: ", "Wave: ", "Energy: ", "maxEnergy: ", "Starshard: ", "maxStarshard: ", "ConveyorMode: ", "ConveyorSlot: ", "BGM: ", "About SaveModifier", "True", "False", "Save to: ", "View in Explorer", "AutoCollect", "Cancel Blueprint Cooldown", "Ignore Flag Events"]
-_text_id = ["title","status_ready","btn_save","label_user","btn_switch","btn_unzip","btn_zip","label_lvl_null","btn_lvl","btn_page","tree_artifact","btn_add","btn_delete","tree_blueprint","btn_modify","label_lvl","label_chapter","label_day","label_flag","label_wave","label_energy","label_maxEnergy","label_starshard","label_maxStarshard","label_conveyor","label_conveyorslot","label_bgm","btn_about","True","False","status_save","btn_open_explorer","label_autoCollect","label_recharge","label_ignoreHugeWaveEvent"]
-
 _language = "zh"
 
 import winreg,Window
@@ -143,6 +139,12 @@ _text_data = {'title': {'zh': 'MVZ2存档修改器 v1.3.1 by QoZnoS', 'en': 'MVZ
     }, 'label_autoCollect': {'zh': '自动收集', 'en': 'AutoCollect'
     }, 'label_recharge': {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
     }, 'label_ignoreHugeWaveEvent': {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
+    }, 'info_missing': {'zh': '参数错误', "en":'Parameter error'
+    }, 'info_missing_stageDefinitionID': {'zh': '读取关卡id失败', 'en':'Fail to read stageDefinitionID'
+    }, 'info_missing_currentFlag': {'zh': '读取旗数失败', 'en':'Fail to read currentFlag'
+    }, 'info_missing_currentWave': {'zh': '读取波数失败', 'en':'Fail to read currentWave'
+    }, 'info_missing_energy': {'zh': '读取当前机械能失败', 'en':'Fail to read energy'
+    }, 'info_missing_maxEnergy': {'zh': '读取最大机械能失败', 'en':'Fail to read maxEnergy'
     }
 }
 
