@@ -34,11 +34,32 @@ class Artifact_Blueprint_Editor:
         tk.Button(artifact_control_frame, text=get_text("btn_add"), width=8, command=self.add_artifact).pack(fill=tk.X, pady=12)
         tk.Button(artifact_control_frame, text=get_text("btn_delete"), width=8, command=self.remove_artifact).pack(fill=tk.X, pady=12)
 
+        frame_blueprint = tk.Frame(self.frame)
+        frame_blueprint.pack(side=tk.LEFT, padx=10, expand=True)
+        # 蓝图列表
+        self.blueprint_tree = ttk.Treeview(frame_blueprint,columns=("id","name"),show="headings",selectmode="browse")
+        self.blueprint_tree.heading("id",text="ID")
+        self.blueprint_tree.column("id",width=28)
+        self.blueprint_tree.heading("name",text=get_text("tree_blueprint"))
+        self.blueprint_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+        # 相关控件
+        blueprint_control_frame = tk.Frame(frame_blueprint)
+        blueprint_control_frame.pack(side=tk.RIGHT, padx=10)
+        self.blueprint_box = ttk.Combobox(blueprint_control_frame, values=NameData.blueprints.name_list, state="disabled", width=20)
+        self.blueprint_box.pack(pady=(0, 12))
+        # tk.Button(blueprint_control_frame, text="添加", width=8).pack(fill=tk.X, pady=12)
+        tk.Button(blueprint_control_frame, text=get_text("btn_modify"), width=8, command=self.modify_blueprint).pack(fill=tk.X, pady=12)
+        # tk.Button(blueprint_control_frame, text="删除", width=8).pack(fill=tk.X, pady=12)
+
     def add_artifact(self):
         print("1")
 
     def remove_artifact(self):
         print("2")
+
+    def modify_blueprint(self):
+        print("2")
+
 
     def refresh(self):
         self.data_handler
@@ -120,7 +141,7 @@ class Numeric_Editor:
 
         tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=3,column=4,columnspan=4,ipadx=64)
 
-    # region numeric_frame
+    # region 响应回调
     # 混乱
     def mix_stageDefinitionID(self,event):
         print("3")

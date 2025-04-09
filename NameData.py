@@ -107,4 +107,78 @@ levels = BilingualDataset(_level_id, _level_name_zh, _level_name_en)
 artifacts = BilingualDataset(_artifact_id, _artifact_name_zh, _artifact_name_en)
 blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name_en)
 musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
-texts = BilingualDataset(_text_id, _text_name_zh, _text_name_en)
+
+_text_data = {'title': {'zh': 'MVZ2存档修改器 v1.3.1 by QoZnoS', 'en': 'MVZ2SaveModifier v1.3.1 by QoZnoS'
+    }, 'status_ready': {'zh': '就绪', 'en': 'Ready'
+    }, 'btn_save': {'zh': '保存文件', 'en': 'Execute the modification'
+    }, 'label_user': {'zh': '当前用户：', 'en': 'current user: '
+    }, 'btn_switch': {'zh': '切换', 'en': 'switch'
+    }, 'btn_unzip': {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
+    }, 'btn_zip': {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
+    }, 'label_lvl_null': {'zh': '当前文件：未选择', 'en': 'current level: empty'
+    }, 'btn_lvl': {'zh': '选择文件', 'en': 'Select level file'
+    }, 'btn_page': {'zh': '切换界面', 'en': 'Another page'
+    }, 'tree_artifact': {'zh': '制品名称', 'en': 'Artifact name'
+    }, 'btn_add': {'zh': '添加', 'en': 'Add'
+    }, 'btn_delete': {'zh': '删除', 'en': 'Delete'
+    }, 'tree_blueprint': {'zh': '蓝图名称', 'en': 'Blueprint name'
+    }, 'btn_modify': {'zh': '修改', 'en': 'Modify'
+    }, 'label_lvl': {'zh': '当前文件：', 'en': 'current level: '
+    }, 'label_chapter': {'zh': '章节：', 'en': 'Chapter: '
+    }, 'label_day': {'zh': '关卡：', 'en': 'Day: '
+    }, 'label_flag': {'zh': '旗数：', 'en': 'Flag: '
+    }, 'label_wave': {'zh': '波数：', 'en': 'Wave: '
+    }, 'label_energy': {'zh': '当前机械能：', 'en': 'Energy: '
+    }, 'label_maxEnergy': {'zh': '机械能上限：', 'en': 'maxEnergy: '
+    }, 'label_starshard': {'zh': '星之碎片数：', 'en': 'Starshard: '
+    }, 'label_maxStarshard': {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
+    }, 'label_conveyor': {'zh': '启用传送带：', 'en': 'ConveyorMode: '
+    }, 'label_conveyorslot': {'zh': '传送带槽数：', 'en': 'ConveyorSlot: '
+    }, 'label_bgm': {'zh': '背景音乐：', 'en': 'BGM: '
+    }, 'btn_about': {'zh': '关于修改器', 'en': 'About SaveModifier'
+    }, 'True': {'zh': '是', 'en': 'True'
+    }, 'False': {'zh': '否', 'en': 'False'
+    }, 'status_save': {'zh': '已保存到：', 'en': 'Save to: '
+    }, 'btn_open_explorer': {'zh': '打开存档文件夹', 'en': 'View in Explorer'
+    }, 'label_autoCollect': {'zh': '自动收集', 'en': 'AutoCollect'
+    }, 'label_recharge': {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
+    }, 'label_ignoreHugeWaveEvent': {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
+    }
+}
+
+class TextManager:
+    """改进的文本管理器，保持与BilingualDataset兼容的接口"""
+    def __init__(self, data):
+        # 构建双向索引
+        self._data = data
+        self._reverse_index = {}
+        
+        # 生成兼容属性
+        self.ids = list(data.keys())
+        self.zh_names = [v['zh'] for v in data.values()]
+        self.en_names = [v['en'] for v in data.values()]
+        
+        # 构建反向索引（中文名→ID，英文名→ID）
+        for text_id, texts in data.items():
+            self._reverse_index[texts['zh']] = text_id
+            self._reverse_index[texts['en']] = text_id
+    
+    def get_name(self, text_id, lang=_language):
+        """兼容原BilingualDataset的调用方式"""
+        if text_id in self._data:
+            return self._data[text_id].get(lang)
+        return f"<Missing Text: {text_id}>"
+    
+    def get_id(self, name):
+        """通过任意语言文本查找ID"""
+        return self._reverse_index.get(name)
+    
+    @property
+    def id_list(self):
+        return self.ids
+    
+    @property
+    def name_list(self):
+        return [self._data[k][_language] for k in self.ids]
+    
+texts = TextManager(_text_data)
