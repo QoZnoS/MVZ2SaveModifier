@@ -17,8 +17,8 @@ A graphical tool for editing *MinecraftVSZombies2* game saves, supporting numeri
 ### 运行步骤 / Steps
 1. **克隆仓库**  
    ```bash
-   git clone https://github.com/yourusername/MinecraftVSZombies2-Save-Editor.git
-   cd MinecraftVSZombies2-Save-Editor
+   git clone https://github.com/QoZnoS/MVZ2SaveModifier.git
+   cd MVZ2SaveModifier
    ```
 
 2. **启动编辑器**  
