@@ -7,6 +7,8 @@ def get_text(id):
     """获取文本"""
     return NameData.texts.get_name(id)
 
+# 数据处理中心
+
 class DataHandler:
     def __init__(self):
         self.current_data = None
@@ -78,6 +80,19 @@ class DataHandler:
             if default != None:
                 return default
             self.missing_log.append(get_text('info_missing_maxEnergy'))
+            self.missing = True
+            return None
+
+    def set_starshardCount(self, value):
+        self.current_data['level']['properties']['starshardCount']=int(value)
+
+    def get_starshardCount(self, default = None):
+        try:
+            return self.current_data['level']['properties']['starshardCount']
+        except:
+            if default != None:
+                return default
+            self.missing_log.append(get_text('info_missing_starshardCount'))
             self.missing = True
             return None
 
@@ -191,8 +206,9 @@ class Numeric_Editor:
         tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=3,column=4,columnspan=4,ipadx=64)
 
     # region 响应回调
-    # 混乱
+
     def mix_stageDefinitionID(self,event):
+        """混乱"""
         mapID = NameData.maps.get_id(self.numeric_stageDefinition_box.get())
         level = self.numeric_stageDefinitionID_box.get()
         isSpecial = (NameData.level_day.count(level)==0)
@@ -206,8 +222,9 @@ class Numeric_Editor:
                 self.numeric_stageDefinitionID_box.config(values=NameData.levels.name_list)
                 self.numeric_stageDefinitionID_box.set(NameData.levels.name_list[0])
             self.data_handler.set_stageDefinitionID(NameData.levels.get_id(level))
-    # 旗数
+    
     def change_flag(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """旗数"""
         if value=="":
             self.data_handler.set_currentFlag(0)
             return True
@@ -215,8 +232,9 @@ class Numeric_Editor:
             self.data_handler.set_currentFlag(value)
             return True
         return False
-    # 波数
+    
     def change_wave(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """波数"""
         if value=="":
             self.data_handler.set_currentWave(0)
             return True
@@ -224,8 +242,9 @@ class Numeric_Editor:
             self.data_handler.set_currentWave(value)
             return True
         return False
-    # 当前机械能
+    
     def change_energy(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """当前机械能"""
         if value=="":
             self.data_handler.set_energy(0)
             return True
@@ -234,8 +253,9 @@ class Numeric_Editor:
             return True
         except ValueError:
             return False
-    # 机械能上限
+    
     def change_maxEnergy(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """机械能上限"""
         if value=="":
             self.data_handler.set_maxEnergy(0)
             return True
@@ -244,32 +264,48 @@ class Numeric_Editor:
             return True
         except ValueError:
             return False
-    # 星之碎片数
+    
     def change_starshardCount(self, action, index, value, prior_value, text, validation_type, trigger_type):
-        print("3")
-    # 星之碎片槽
+        """星之碎片数"""
+        if value=="":
+            self.data_handler.set_starshardCount(0)
+            return True
+        try:
+            self.data_handler.set_starshardCount(value)
+            return True
+        except ValueError:
+            return False
+    
     def change_starshardSlotCount(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """星之碎片槽"""
         print("3")
-    # 是否启用传送带
+    
     def is_ConveyorMode(self,event):
+        """是否启用传送带"""
         print("3")
-    # 传送带槽数
+    
     def change_conveyorSlotCount(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        """传送带槽数"""
         print("3")
-    # 背景音乐
+    
     def change_musicID(self,event):
+        """背景音乐"""
         print("3")
-    # 自动收集
+    
     def is_aotuCollect(self,event):
+        """自动收集"""
         print("3")
-    # 蓝图无冷却
+    
     def change_rechargeSpeed(self,event):
+        """蓝图无冷却"""
         print("3")
-    # 忽略大波事件
+    
     def is_ignoreHugeWaveEvent(self,event):
+        """忽略大波事件"""
         print("3")
-    # 关于
+    
     def open_about(self):
+        """关于"""
         Window.AboutWindow(self.master)
     # endregion
 
@@ -333,15 +369,22 @@ class Numeric_Editor:
             box.set(get_text("False"))
     # endregion
 
-def add_box(frame, label, row, column, value, command):
+# region 通用UI组件
+
+def add_box(frame, label:str, row, column, value:list, command):
     tk.Label(frame, text=get_text(label)).grid(row=row, column=2*column, sticky="e", pady=12)
     box = ttk.Combobox(frame, values=value, state="disable", width=16)
     box.grid(row=row, column=2*column+1, sticky="ew", pady=12)
     box.bind("<<ComboboxSelected>>", command)
     return box
 
-def add_input(frame, label, row, column, validatecommand):
+def add_input(frame, label:str, row, column, validatecommand):
     tk.Label(frame, text=get_text(label)).grid(row=row, column=2*column, sticky="e", pady=12)
-    input = ttk.Entry(frame, state="disable", validate='key',validatecommand=(validatecommand, '%d', '%i', '%P', '%s', '%v', '%V', '%W'))
+    input = ttk.Entry(frame, state="disable", validate='key',validatecommand=(validatecommand, '%d', '%i', '%P', '%s', '%v', '%V', '%W'),width=16)
     input.grid(row=row, column=2*column+1, sticky="ew", pady=12)
     return input
+
+def add_check(frame, label:str, row, column, command):
+    check = ttk.Checkbutton(frame)
+
+# endregion

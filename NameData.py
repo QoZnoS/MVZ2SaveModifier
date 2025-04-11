@@ -145,6 +145,7 @@ _text_data = {'title': {'zh': 'MVZ2存档修改器 v1.3.1 by QoZnoS', 'en': 'MVZ
     }, 'info_missing_currentWave': {'zh': '读取波数失败', 'en':'Fail to read currentWave'
     }, 'info_missing_energy': {'zh': '读取当前机械能失败', 'en':'Fail to read energy'
     }, 'info_missing_maxEnergy': {'zh': '读取最大机械能失败', 'en':'Fail to read maxEnergy'
+    }, 'info_missing_starshardCount': {'zh': '读取星之碎片数失败', 'en':'Fail to read starshardCount'
     }
 }
 
