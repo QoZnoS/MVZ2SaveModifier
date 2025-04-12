@@ -38,4 +38,3 @@ A graphical tool for editing *MinecraftVSZombies2* game saves, supporting numeri
 
 本项目基于 [MIT License](LICENSE) 开源。  
 This project is open-source under the [MIT License](LICENSE).
-```
