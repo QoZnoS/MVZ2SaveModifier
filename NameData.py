@@ -20,6 +20,46 @@ _musics_name_zh = ['疯狂戴夫', '选择你的种子', '草地行走', '莱克
 _musics_name_en = ["Crazy Dave", "Choose Your Seeds", "Grasswalk", "Lexonomicon Level", "Lexonomicon Map", "Loon Boon","Utimate Battle", "Lexonomicon Boss", "Fractured Fairytales Level", "Fractured Fairytales Map", "Suspension", "The Binding of Isaac", "Repentant", "The Mysterious Shrine Maiden Flying Through", "Pandemonic Planet (1st part)", "Pandemonic Planet (2nd part)", "A Shadow in the Blue Sky","Fading Echoes of Memory","The Shining Needle Castle Sinking to the Void", "Witherstep", "Zombies in your phone", "Reverse Ideology", "The Exacerbated Castle Keep", "Inchlings of the Shining Needle ~ Little Princess", "Astounding Planet Boss"]
 _musics_id = ['mvz2:mainmenu', 'mvz2:choosing', 'mvz2:day', 'mvz2:halloween', 'mvz2:halloween_map', 'mvz2:minigame', 'mvz2:ultimate_battle', 'mvz2:halloween_boss', 'mvz2:dream_level', 'mvz2:dream_map', 'mvz2:suspension', 'mvz2:nightmare_map', 'mvz2:nightmare_level', 'mvz2:nightmare_final', 'mvz2:nightmare_boss', 'mvz2:nightmare_boss2', 'mvz2:gensokyo_map', 'mvz2:distress', 'mvz2:castle_map', 'mvz2:castle_level', 'mvz2:phone_ring', 'mvz2:seija', 'mvz2:sad_shinmyoumaru', 'mvz2:castle_final', 'mvz2:wither_boss']
 
+_text_data = {'title': {'zh': 'MVZ2存档修改器 v1.3.1 by QoZnoS', 'en': 'MVZ2SaveModifier v1.3.1 by QoZnoS'
+    }, 'status_ready': {'zh': '就绪', 'en': 'Ready'
+    }, 'btn_save': {'zh': '保存文件', 'en': 'Execute the modification'
+    }, 'label_user': {'zh': '当前用户：', 'en': 'current user: '
+    }, 'btn_switch': {'zh': '切换', 'en': 'switch'
+    }, 'btn_unzip': {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
+    }, 'btn_zip': {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
+    }, 'label_lvl_null': {'zh': '当前文件：未选择', 'en': 'current level: empty'
+    }, 'btn_lvl': {'zh': '选择文件', 'en': 'Select level file'
+    }, 'btn_page': {'zh': '切换界面', 'en': 'Another page'
+    }, 'tree_artifact': {'zh': '制品名称', 'en': 'Artifact name'
+    }, 'btn_add': {'zh': '添加', 'en': 'Add'
+    }, 'btn_delete': {'zh': '删除', 'en': 'Delete'
+    }, 'tree_blueprint': {'zh': '蓝图名称', 'en': 'Blueprint name'
+    }, 'btn_modify': {'zh': '修改', 'en': 'Modify'
+    }, 'label_lvl': {'zh': '当前文件：', 'en': 'current level: '
+    }, 'label_chapter': {'zh': '章节：', 'en': 'Chapter: '
+    }, 'label_day': {'zh': '关卡：', 'en': 'Day: '
+    }, 'label_flag': {'zh': '旗数：', 'en': 'Flag: '
+    }, 'label_wave': {'zh': '波数：', 'en': 'Wave: '
+    }, 'label_energy': {'zh': '当前机械能：', 'en': 'Energy: '
+    }, 'label_maxEnergy': {'zh': '机械能上限：', 'en': 'maxEnergy: '
+    }, 'label_starshard': {'zh': '星之碎片数：', 'en': 'Starshard: '
+    }, 'label_maxStarshard': {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
+    }, 'label_conveyor': {'zh': '启用传送带：', 'en': 'ConveyorMode: '
+    }, 'label_conveyorslot': {'zh': '传送带槽数：', 'en': 'ConveyorSlot: '
+    }, 'label_bgm': {'zh': '背景音乐：', 'en': 'BGM: '
+    }, 'btn_about': {'zh': '关于修改器', 'en': 'About SaveModifier'
+    }, 'True': {'zh': '是', 'en': 'True'
+    }, 'False': {'zh': '否', 'en': 'False'
+    }, 'status_save': {'zh': '已保存到：', 'en': 'Save to: '
+    }, 'btn_open_explorer': {'zh': '打开存档文件夹', 'en': 'View in Explorer'
+    }, 'label_autoCollect': {'zh': '自动收集', 'en': 'AutoCollect'
+    }, 'label_recharge': {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
+    }, 'label_ignoreHugeWaveEvent': {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
+    }, 'info_missing': {'zh': '参数错误', "en":'Parameter error'
+    }, 'info_missing_param': {'zh': '读取参数失败：', 'en':'Fail to read param: '
+    }
+}
+
 _language = "zh"
 
 import winreg,Window
@@ -98,57 +138,6 @@ class BilingualDataset:
         if _language=="en":
             return self.en_names
 
-maps = BilingualDataset(_maps_id, _maps_name_zh, _maps_name_en)
-levels = BilingualDataset(_level_id, _level_name_zh, _level_name_en)
-artifacts = BilingualDataset(_artifact_id, _artifact_name_zh, _artifact_name_en)
-blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name_en)
-musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
-
-_text_data = {'title': {'zh': 'MVZ2存档修改器 v1.3.1 by QoZnoS', 'en': 'MVZ2SaveModifier v1.3.1 by QoZnoS'
-    }, 'status_ready': {'zh': '就绪', 'en': 'Ready'
-    }, 'btn_save': {'zh': '保存文件', 'en': 'Execute the modification'
-    }, 'label_user': {'zh': '当前用户：', 'en': 'current user: '
-    }, 'btn_switch': {'zh': '切换', 'en': 'switch'
-    }, 'btn_unzip': {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
-    }, 'btn_zip': {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
-    }, 'label_lvl_null': {'zh': '当前文件：未选择', 'en': 'current level: empty'
-    }, 'btn_lvl': {'zh': '选择文件', 'en': 'Select level file'
-    }, 'btn_page': {'zh': '切换界面', 'en': 'Another page'
-    }, 'tree_artifact': {'zh': '制品名称', 'en': 'Artifact name'
-    }, 'btn_add': {'zh': '添加', 'en': 'Add'
-    }, 'btn_delete': {'zh': '删除', 'en': 'Delete'
-    }, 'tree_blueprint': {'zh': '蓝图名称', 'en': 'Blueprint name'
-    }, 'btn_modify': {'zh': '修改', 'en': 'Modify'
-    }, 'label_lvl': {'zh': '当前文件：', 'en': 'current level: '
-    }, 'label_chapter': {'zh': '章节：', 'en': 'Chapter: '
-    }, 'label_day': {'zh': '关卡：', 'en': 'Day: '
-    }, 'label_flag': {'zh': '旗数：', 'en': 'Flag: '
-    }, 'label_wave': {'zh': '波数：', 'en': 'Wave: '
-    }, 'label_energy': {'zh': '当前机械能：', 'en': 'Energy: '
-    }, 'label_maxEnergy': {'zh': '机械能上限：', 'en': 'maxEnergy: '
-    }, 'label_starshard': {'zh': '星之碎片数：', 'en': 'Starshard: '
-    }, 'label_maxStarshard': {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
-    }, 'label_conveyor': {'zh': '启用传送带：', 'en': 'ConveyorMode: '
-    }, 'label_conveyorslot': {'zh': '传送带槽数：', 'en': 'ConveyorSlot: '
-    }, 'label_bgm': {'zh': '背景音乐：', 'en': 'BGM: '
-    }, 'btn_about': {'zh': '关于修改器', 'en': 'About SaveModifier'
-    }, 'True': {'zh': '是', 'en': 'True'
-    }, 'False': {'zh': '否', 'en': 'False'
-    }, 'status_save': {'zh': '已保存到：', 'en': 'Save to: '
-    }, 'btn_open_explorer': {'zh': '打开存档文件夹', 'en': 'View in Explorer'
-    }, 'label_autoCollect': {'zh': '自动收集', 'en': 'AutoCollect'
-    }, 'label_recharge': {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
-    }, 'label_ignoreHugeWaveEvent': {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
-    }, 'info_missing': {'zh': '参数错误', "en":'Parameter error'
-    }, 'info_missing_stageDefinitionID': {'zh': '读取关卡id失败', 'en':'Fail to read stageDefinitionID'
-    }, 'info_missing_currentFlag': {'zh': '读取旗数失败', 'en':'Fail to read currentFlag'
-    }, 'info_missing_currentWave': {'zh': '读取波数失败', 'en':'Fail to read currentWave'
-    }, 'info_missing_energy': {'zh': '读取当前机械能失败', 'en':'Fail to read energy'
-    }, 'info_missing_maxEnergy': {'zh': '读取最大机械能失败', 'en':'Fail to read maxEnergy'
-    }, 'info_missing_starshardCount': {'zh': '读取星之碎片数失败', 'en':'Fail to read starshardCount'
-    }
-}
-
 class TextManager:
     """改进的文本管理器，保持与BilingualDataset兼容的接口"""
     def __init__(self, data):
@@ -184,4 +173,11 @@ class TextManager:
     def name_list(self):
         return [self._data[k][_language] for k in self.ids]
     
+maps = BilingualDataset(_maps_id, _maps_name_zh, _maps_name_en)
+levels = BilingualDataset(_level_id, _level_name_zh, _level_name_en)
+artifacts = BilingualDataset(_artifact_id, _artifact_name_zh, _artifact_name_en)
+blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name_en)
+musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
 texts = TextManager(_text_data)
+
+bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])

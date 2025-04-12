@@ -8,7 +8,7 @@ def get_save_path():
     '''根据系统返回userdata路径'''
     system = platform.system()
     if system == "Windows":
-        return os.path.expandvars(r"%HOMEPATH%\\AppData\\LocalLow\\Cuerzor\\MinecraftVSZombies2\\userdata")
+        return os.path.expandvars(r"%HOMEPATH%\AppData\LocalLow\Cuerzor\MinecraftVSZombies2\userdata")
     elif system == "Darwin":  # macOS
         return os.path.expanduser("~/Library/Application Support/Cuerzor/MinecraftVSZombies2/userdata")
     else:  # Linux
@@ -88,7 +88,7 @@ class ArchiveEditor:
         """打开存档选择窗口"""
         Window.SaveFileSelector(
             parent=self.root,
-            save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex)),
+            save_dir=get_save_path() + (f"\\user{self.currentUserIndex}\\mvz2\\level"),
             on_select=self.handle_save_selected  # 关键：选择后的回调
         )
         
@@ -118,18 +118,18 @@ class ArchiveEditor:
         self.username_label.config(text=get_text("label_user") + self.username)
     # 保存文件
     def output_file(self):
-        save_dir=get_save_path() + "/user%d/mvz2/level/"%(self.currentUserIndex) + os.path.basename(self.current_file)
+        save_dir=get_save_path() + f"\\user{self.currentUserIndex}\\mvz2\\level\\" + os.path.basename(self.current_file)
         output=json.dumps(self.datahandler.current_data,cls=CustonJson.CustomEncoder).encode("utf-8")
         self.status.set(get_text("status_save") + save_dir)
         compress(save_dir,output)
     # 打开存档文件夹
     def open_save_explorer(self):
-        save_dir=get_save_path() + ("/user%d/mvz2/level"%(self.currentUserIndex))
+        save_dir=get_save_path() + ("\\user%d\\mvz2\\level"%(self.currentUserIndex))
         subprocess.run(f'explorer "{os.path.normpath(save_dir)}"', shell=True)
     # 获取用户数据
     def get_usersdata(self):
         '''获取用户数据'''
-        users_path = get_save_path() + "/users.dat"
+        users_path = get_save_path() + "\\users.dat"
         self.users = json.loads(decompress(users_path),cls=CustonJson.CustomDecoder)
         self.currentUserIndex = self.users['currentUserIndex']
         self.username = self.users['metas'][self.currentUserIndex]['username']
