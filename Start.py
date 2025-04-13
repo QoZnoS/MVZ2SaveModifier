@@ -47,12 +47,17 @@ class ArchiveEditor:
         self.setup_user_frame()
         self.setup_file_frame()
 
-        self.numeric_editor = Editor.Numeric_Editor(self.archive,self.datahandler)
-        self.artifact_blueprint_editor = Editor.Artifact_Blueprint_Editor(self.archive,self.datahandler)
-
         self.archive.pack(fill='both', expand=True)
-        self.archive.add(self.numeric_editor.frame, text="基础编辑器")
-        self.archive.add(self.artifact_blueprint_editor.frame, text="蓝图/制品")
+
+        self.page = []
+        page = [('page_Numeric_Editor', Editor.Numeric_Editor), 
+                ('page_Artifact_Blueprint_Editor', Editor.Artifact_Blueprint_Editor), 
+                ('page_Grids_Editor', Editor.Grids_Editor), 
+                ('page_EnemyPool_Editor', Editor.EnemyPool_Editor)]
+        for lbl,cls in page:
+            new_page = cls(self.archive, self.datahandler)
+            self.archive.add(new_page.frame, text = get_text(lbl))
+            self.page.append(new_page)
 
         # 状态栏
         self.status = tk.StringVar()
@@ -167,8 +172,8 @@ class ArchiveEditor:
             messagebox.showerror("Error", f"Failed to compress: {str(e)}")
     # 刷新
     def refresh(self):
-        self.artifact_blueprint_editor.refresh()
-        self.numeric_editor.refresh()
+        for page in self.page:
+            page.refresh()
 
 if __name__ == "__main__":
     # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")

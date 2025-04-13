@@ -19,184 +19,262 @@ class DataHandler:
 
     # region numeric
     def set_stageDefinitionID(self, value:str):
-        self.current_data['level']['stageDefinitionID'] = value
+        self.current_data['level']['stageDefinitionID'] = str(value)
 
     def get_stageDefinitionID(self, default:str = None):
         try:
             return str(self.current_data['level']['stageDefinitionID'])
         except:
             if default != None:
-                return default
+                return str(default)
             self.missing_log.append(get_text('info_missing_param') + 'stageDefinitionID')
             self.missing = True
             return None
 
     def set_currentFlag(self, value:int):
-        self.current_data['level']['currentFlag'] = value
+        self.current_data['level']['currentFlag'] = int(value)
 
     def get_currentFlag(self, default:int = None):
         try:
             return int(self.current_data['level']['currentFlag'])
         except:
             if default != None:
-                return default
+                return int(default)
             self.missing_log.append(get_text('info_missing_param') + 'currentFlag')
             self.missing = True
             return None
 
     def set_currentWave(self, value:int):
-        self.current_data['level']['currentWave'] = value
+        self.current_data['level']['currentWave'] = int(value)
 
     def get_currentWave(self, default:int = None):
         try:
             return int(self.current_data['level']['currentWave'])
         except:
             if default != None:
-                return default
+                return int(default)
             self.missing_log.append(get_text('info_missing_param') + 'currentWave')
             self.missing = True
             return None
 
     def set_energy(self, value:float):
-        self.current_data['level']['energy'] = value
+        self.current_data['level']['energy'] = float(value)
 
     def get_energy(self, default:float = None):
         try:
             return float(self.current_data['level']['energy'])
         except:
             if default != None:
-                return default
+                return float(default)
             self.missing_log.append(get_text('info_missing_param') + 'energy')
             self.missing = True
             return None
 
     def set_maxEnergy(self, value:float):
-        self.current_data['level']['Option']['maxEnergy'] = value
+        self.current_data['level']['Option']['maxEnergy'] = float(value)
 
     def get_maxEnergy(self, default:float = None):
         try:
             return float(self.current_data['level']['Option']['maxEnergy'])
         except:
             if default != None:
-                return default
+                return float(default)
             self.missing_log.append(get_text('info_missing_param') + 'maxEnergy')
             self.missing = True
             return None
 
     def set_starshardCount(self, value:int):
-        self.current_data['level']['properties']['starshardCount'] = value
+        self.current_data['level']['properties']['starshardCount'] = int(value)
 
     def get_starshardCount(self, default:int = None):
         try:
             return int(self.current_data['level']['properties']['starshardCount'])
         except:
             if default != None:
-                return default
+                return int(default)
             self.missing_log.append(get_text('info_missing_param') + 'starshardCount')
             self.missing = True
             return None
 
     def set_starshardSlotCount(self, value:int):
-        self.current_data['level']['properties']['starshardSlotCount'] = value
+        self.current_data['level']['properties']['starshardSlotCount'] = int(value)
 
     def get_starshardSlotCount(self, default:int = None):
         try:
             return int(self.current_data['level']['properties']['starshardSlotCount'])
         except:
             if default != None:
-                return default
+                return int(default)
             self.missing_log.append(get_text('info_missing_param') + 'starshardSlotCount')
             self.missing = True
             return None
 
     def set_isConveyorMode(self, value:bool):
-        self.current_data['level']['components']['mvz2:blueprints']['isConveyorMode'] = value
+        self.current_data['level']['components']['mvz2:blueprints']['isConveyorMode'] = bool(value)
 
     def get_isConveyorMode(self, default:bool = None):
         try:
             return bool(self.current_data['level']['components']['mvz2:blueprints']['isConveyorMode'])
         except:
             if default != None:
-                return default
+                return bool(default)
             self.missing_log.append(get_text('info_missing_param') + 'isConveyorMode')
             self.missing = True
             return None
 
     def set_noEnergy(self, value:bool):
-        self.current_data['level']['properties']['noEnergy'] = value
+        self.current_data['level']['properties']['noEnergy'] = bool(value)
 
     def get_noEnergy(self, default:bool = None):
         try:
             return bool(self.current_data['level']['properties']['noEnergy'])
         except:
             if default != None:
-                return default
+                return bool(default)
             self.missing_log.append(get_text('info_missing_param') + 'noEnergy')
             self.missing = True
             return None
 
     def set_conveyorSlotCount(self, value:int):
-        self.current_data['level']['conveyorSlotCount'] = value
+        self.current_data['level']['conveyorSlotCount'] = int(value)
 
     def get_conveyorSlotCount(self, default:int = None):
         try:
             return int(self.current_data['level']['conveyorSlotCount'])
         except:
             if default != None:
-                return default
+                return int(default)
             self.missing_log.append(get_text('info_missing_param') + 'conveyorSlotCount')
             self.missing = True
             return None
 
     def set_musicID(self, value:str):
-        self.current_data['musicID'] = value
+        self.current_data['musicID'] = str(value)
 
     def get_musicID(self, default:str = None):
         try:
             return str(self.current_data['musicID'])
         except:
             if default != None:
-                return default
+                return str(default)
             self.missing_log.append(get_text('info_missing_param') + 'musicID')
             self.missing = True
             return None
 
-    def set_aotuCollect(self, value:bool):
-        self.current_data['level']['properties']['autoCollect'] = value
+    def set_autoCollect(self, value:bool):
+        self.current_data['level']['properties']['autoCollect'] = bool(value)
 
-    def get_aotuCollect(self, default:bool = None):
+    def get_autoCollect(self, default:bool = None):
         try:
             return bool(self.current_data['level']['properties']['autoCollect'])
         except:
             if default != None:
-                return default
+                return bool(default)
             self.missing_log.append(get_text('info_missing_param') + 'autoCollect')
             self.missing = True
             return None
 
     def set_rechargeSpeed(self, value:float):
-        self.current_data['level']['rechargeSpeed'] = value
+        self.current_data['level']['rechargeSpeed'] = float(value)
 
     def get_rechargeSpeed(self, default:float = None):
         try:
             return float(self.current_data['level']['rechargeSpeed'])
         except:
             if default != None:
-                return default
+                return float(default)
             self.missing_log.append(get_text('info_missing_param') + 'rechargeSpeed')
             self.missing = True
             return None
 
     def set_ignoreHugeWaveEvent(self, value:bool):
-        self.current_data['level']['properties']['ignoreHugeWaveEvent'] = value
+        self.current_data['level']['properties']['ignoreHugeWaveEvent'] = bool(value)
 
     def get_ignoreHugeWaveEvent(self, default:bool = None):
         try:
             return bool(self.current_data['level']['properties']['ignoreHugeWaveEvent'])
         except:
             if default != None:
-                return default
+                return bool(default)
             self.missing_log.append(get_text('info_missing_param') + 'ignoreHugeWaveEvent')
+            self.missing = True
+            return None
+
+    def set_energyActive(self, value:bool):
+        self.current_data['energyActive'] = bool(value)
+
+    def get_energyActive(self, default:bool = None):
+        try:
+            return bool(self.current_data['energyActive'])
+        except:
+            if default != None:
+                return bool(default)
+            self.missing_log.append(get_text('info_missing_param') + 'energyActive')
+            self.missing = True
+            return None
+
+    def set_blueprintsActive(self, value:bool):
+        self.current_data['blueprintsActive'] = bool(value)
+
+    def get_blueprintsActive(self, default:bool = None):
+        try:
+            return bool(self.current_data['blueprintsActive'])
+        except:
+            if default != None:
+                return bool(default)
+            self.missing_log.append(get_text('info_missing_param') + 'blueprintsActive')
+            self.missing = True
+            return None
+
+    def set_pickaxeActive(self, value:bool):
+        self.current_data['pickaxeActive'] = bool(value)
+
+    def get_pickaxeActive(self, default:bool = None):
+        try:
+            return bool(self.current_data['pickaxeActive'])
+        except:
+            if default != None:
+                return bool(default)
+            self.missing_log.append(get_text('info_missing_param') + 'pickaxeActive')
+            self.missing = True
+            return None
+
+    def set_starshardActive(self, value:bool):
+        self.current_data['starshardActive'] = bool(value)
+
+    def get_starshardActive(self, default:bool = None):
+        try:
+            return bool(self.current_data['starshardActive'])
+        except:
+            if default != None:
+                return bool(default)
+            self.missing_log.append(get_text('info_missing_param') + 'starshardActive')
+            self.missing = True
+            return None
+
+    def set_triggerActive(self, value:bool):
+        self.current_data['triggerActive'] = bool(value)
+
+    def get_triggerActive(self, default:bool = None):
+        try:
+            return bool(self.current_data['triggerActive'])
+        except:
+            if default != None:
+                return bool(default)
+            self.missing_log.append(get_text('info_missing_param') + 'triggerActive')
+            self.missing = True
+            return None
+    
+    def set_difficulty(self, value:str):
+        self.current_data['level']['difficulty'] = str(value)
+
+    def get_difficulty(self, default:str = None):
+        try:
+            return str(self.current_data['level']['difficulty'])
+        except:
+            if default != None:
+                return str(default)
+            self.missing_log.append(get_text('info_missing_param') + 'difficulty')
             self.missing = True
             return None
 
@@ -262,7 +340,6 @@ class Artifact_Blueprint_Editor:
     def modify_blueprint(self):
         print("2")
 
-
     def refresh(self):
         self.data_handler
 
@@ -278,24 +355,31 @@ class Numeric_Editor:
         frame_group = tk.Frame(self.frame)
         frame_group.pack(side=tk.LEFT, padx=10, expand=True)
 
-        self.entry_vars = {}
+        self.vars = {}
         
-        self.stageDefinition_box        = add_box(frame_group, "label_chapter"          , 0, 0, NameData.maps.name_list, self.mix_stageDefinitionID)        # 章节
-        self.stageDefinitionID_box      = add_box(frame_group, "label_day"              , 1, 0, NameData.level_day, self.mix_stageDefinitionID)             # 关卡
-        self.flag_input                 = add_input(frame_group, "label_flag"           , 2, 0, self.master.register(self.change_flag))                     # 旗帜
-        self.wave_input                 = add_input(frame_group, "label_wave"           , 3, 0, self.master.register(self.change_wave))                     # 波数
-        self.energy_input               = add_input(frame_group, "label_energy"         , 0, 1, self.master.register(self.change_energy))                   # 当前机械能
-        self.maxEnergy_input            = add_input(frame_group, "label_maxEnergy"      , 1, 1, self.master.register(self.change_maxEnergy))                # 机械能上限
-        self.starshardCount_input       = add_input(frame_group, "label_starshard"      , 2, 1, self.master.register(self.change_starshardCount))           # 星之碎片数
-        self.starshardSlotCount_input   = add_input(frame_group, "label_maxStarshard"   , 3, 1, self.master.register(self.change_starshardSlotCount))       # 星之碎片槽
-        self.isConveyorMode_box         = add_box(frame_group, "label_conveyor"         , 0, 2, [get_text("True"),get_text("False")], self.is_ConveyorMode) # 启用传送带
-        self.conveyorSlotCount_input    = add_input(frame_group, "label_conveyorslot"   , 1, 2, self.master.register(self.change_conveyorSlotCount))        # 传送带槽数
-        self.musicID_box                = add_box(frame_group, "label_bgm"              , 2, 2, NameData.musics.name_list, self.change_musicID)             # 背景音乐
-        self.autoCollect_box            = add_box(frame_group, "label_autoCollect"      , 0, 3, [get_text("True"),get_text("False")], self.is_aotuCollect)  # 自动收集
-        self.recharge_box               = add_box(frame_group, "label_recharge"         , 1, 3, [get_text("True"),get_text("False")], self.change_rechargeSpeed) # 蓝图无冷却
-        self.ignoreHugeWaveEvent_box    = add_box(frame_group, "label_ignoreHugeWaveEvent", 2, 3, [get_text("True"),get_text("False")], self.is_ignoreHugeWaveEvent) # 忽略大波事件
+        self.stageDefinition_box        =add_box(frame_group,"label_chapter"                , 0, 0, NameData.maps.name_list, self.mix_stageDefinitionID)    # 章节
+        self.stageDefinitionID_box      =add_box(frame_group,"label_day"                    , 1, 0, NameData.level_day, self.mix_stageDefinitionID)         # 关卡
+        self.musicID_box                =add_box(frame_group,"label_musicID"                , 2, 0, NameData.musics.name_list, self.change_musicID)         # 背景音乐
+        self.flag_input                 =add_input(frame_group,"label_flag"                 , 3, 0, self.master.register(self.change_flag))                 # 旗帜
+        self.wave_input                 =add_input(frame_group,"label_wave"                 , 4, 0, self.master.register(self.change_wave))                 # 波数
+        self.energy_input               =add_input(frame_group,"label_energy"               , 0, 1, self.master.register(self.change_energy))               # 当前机械能
+        self.maxEnergy_input            =add_input(frame_group,"label_maxEnergy"            , 1, 1, self.master.register(self.change_maxEnergy))            # 机械能上限
+        self.starshardCount_input       =add_input(frame_group,"label_starshard"            , 2, 1, self.master.register(self.change_starshardCount))       # 星之碎片数
+        self.starshardSlotCount_input   =add_input(frame_group,"label_maxStarshard"         , 3, 1, self.master.register(self.change_starshardSlotCount))   # 星之碎片槽
+        self.conveyorSlotCount_input    =add_input(frame_group,"label_conveyorslot"         , 4, 1, self.master.register(self.change_conveyorSlotCount))    # 传送带槽数
+        self.difficulty_box             =add_box(frame_group,"label_difficulty"             , 0, 2, NameData.difficultys.name_list, self.change_difficulty) # 难度
+        self.autoCollect_check          =add_check(frame_group,"label_autoCollect"          , 1, 2, self.change_autoCollect)                                # 自动收集
+        self.rechargeSpeed_check        =add_check(frame_group,"label_rechargeSpeed"        , 2, 2, self.change_rechargeSpeed)                              # 蓝图无冷却
+        self.ignoreHugeWaveEvent_check  =add_check(frame_group,"label_ignoreHugeWaveEvent"  , 3, 2, self.change_ignoreHugeWaveEvent)                        # 忽略大波事件
+        self.isConveyorMode_check       =add_check(frame_group,"label_isConveyorMode"       , 4, 2, self.change_isConveyorMode)                             # 启用传送带
+        self.energyActive_check         =add_check(frame_group,"label_energyActive"         , 0, 3, self.change_energyActive)                               # 显示机械能
+        self.blueprintsActive_check     =add_check(frame_group,"label_blueprintsActive"     , 1, 3, self.change_blueprintsActive)                           # 显示蓝图
+        self.pickaxeActive_check        =add_check(frame_group,"label_pickaxeActive"        , 2, 3, self.change_pickaxeActive)                              # 启用镐子
+        self.starshardActive_check      =add_check(frame_group,"label_starshardActive"      , 3, 3, self.change_starshardActive)                            # 启用星之碎片
+        self.triggerActive_check        =add_check(frame_group,"label_triggerActive"        , 4, 3, self.change_triggerActive)                              # 启用驱动
 
-        tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=3,column=4,columnspan=4,ipadx=64)
+        # self.difficulty_box.config(width=6)
+        # tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=4,column=6,ipadx=48)
 
     # region 响应回调
     def mix_stageDefinitionID(self,event):
@@ -378,10 +462,11 @@ class Numeric_Editor:
         except ValueError:
             return False
     
-    def is_ConveyorMode(self,event):
-        """是否启用传送带"""
-        var = self.isConveyorMode_box.get()
-        self.data_handler.set_isConveyorMode(NameData.bools.get_id(var))
+    def change_isConveyorMode(self,event):
+        """是否启用传送带，同时修改生成属性"""
+        var = self.vars[self.isConveyorMode_check].get()
+        self.data_handler.set_isConveyorMode(var)
+        self.data_handler.set_noEnergy(var)
     
     def change_conveyorSlotCount(self, action, index, value, prior_value, text, validation_type, trigger_type):
         """传送带槽数"""
@@ -399,24 +484,54 @@ class Numeric_Editor:
         var = self.musicID_box.get()
         self.data_handler.set_musicID(NameData.musics.get_id(var))
     
-    def is_aotuCollect(self,event):
+    def change_difficulty(self,event):
+        """难度"""
+        var = self.difficulty_box.get()
+        self.data_handler.set_difficulty(NameData.difficultys.get_id(var))
+
+    def change_autoCollect(self,event):
         """自动收集"""
-        var = self.autoCollect_box.get()
-        self.data_handler.set_aotuCollect(NameData.bools.get_id(var))
+        var = self.vars[self.autoCollect_check].get()
+        self.data_handler.set_autoCollect(var)
     
     def change_rechargeSpeed(self,event):
         """蓝图无冷却"""
-        var = self.recharge_box.get()
-        if NameData.bools.get_id(var):
+        var = self.vars[self.rechargeSpeed_check].get()
+        if var:
             self.data_handler.set_rechargeSpeed(15532.0)
         else:
             self.data_handler.set_rechargeSpeed(1.0)
     
-    def is_ignoreHugeWaveEvent(self,event):
+    def change_ignoreHugeWaveEvent(self,event):
         """忽略大波事件"""
-        var = self.ignoreHugeWaveEvent_box.get()
-        self.data_handler.set_ignoreHugeWaveEvent(NameData.bools.get_id(var))
+        var = self.vars[self.ignoreHugeWaveEvent_check].get()
+        self.data_handler.set_ignoreHugeWaveEvent(var)
     
+    def change_energyActive(self):
+        """显示机械能"""
+        var = self.vars[self.energyActive_check].get()
+        self.data_handler.set_energyActive(var)
+
+    def change_blueprintsActive(self):
+        """显示蓝图"""
+        var = self.vars[self.blueprintsActive_check].get()
+        self.data_handler.set_blueprintsActive(var)
+
+    def change_pickaxeActive(self):
+        """启用镐子"""
+        var = self.vars[self.pickaxeActive_check].get()
+        self.data_handler.set_pickaxeActive(var)
+
+    def change_starshardActive(self):
+        """启用星之碎片"""
+        var = self.vars[self.starshardActive_check].get()
+        self.data_handler.set_starshardActive(var)
+
+    def change_triggerActive(self):
+        """启用驱动"""
+        var = self.vars[self.triggerActive_check].get()
+        self.data_handler.set_triggerActive(var)
+
     def open_about(self):
         """关于"""
         Window.AboutWindow(self.master)
@@ -426,18 +541,24 @@ class Numeric_Editor:
     # region 刷新，读取参数
     def refresh(self):
         self.refresh_map_box()
-        self.refresh_input(self.flag_input, self.data_handler.get_currentFlag())
-        self.refresh_input(self.wave_input, self.data_handler.get_currentWave())
-        self.refresh_input(self.energy_input, self.data_handler.get_energy())
-        self.refresh_input(self.maxEnergy_input, self.data_handler.get_maxEnergy())
-        self.refresh_input(self.starshardCount_input, self.data_handler.get_starshardCount(0))
-        self.refresh_input(self.starshardSlotCount_input, self.data_handler.get_starshardSlotCount())
-        self.refresh_box(self.isConveyorMode_box, self.data_handler.get_isConveyorMode(), NameData.bools)
-        self.refresh_input(self.conveyorSlotCount_input, self.data_handler.get_conveyorSlotCount())
-        self.refresh_box(self.musicID_box, self.data_handler.get_musicID(), NameData.musics)
-        self.refresh_box(self.autoCollect_box, self.data_handler.get_aotuCollect(False), NameData.bools)
-        self.refresh_box(self.recharge_box, (self.data_handler.get_rechargeSpeed() != 1.0), NameData.bools)
-        self.refresh_box(self.ignoreHugeWaveEvent_box, self.data_handler.get_ignoreHugeWaveEvent(False), NameData.bools)
+        self.refresh_input( self.flag_input,                self.data_handler.get_currentFlag())
+        self.refresh_input( self.wave_input,                self.data_handler.get_currentWave())
+        self.refresh_input( self.energy_input,              self.data_handler.get_energy())
+        self.refresh_input( self.maxEnergy_input,           self.data_handler.get_maxEnergy())
+        self.refresh_input( self.starshardCount_input,      self.data_handler.get_starshardCount(0))
+        self.refresh_input( self.starshardSlotCount_input,  self.data_handler.get_starshardSlotCount())
+        self.refresh_check( self.isConveyorMode_check,      self.data_handler.get_isConveyorMode())
+        self.refresh_input( self.conveyorSlotCount_input,   self.data_handler.get_conveyorSlotCount())
+        self.refresh_box(   self.musicID_box,               self.data_handler.get_musicID(), NameData.musics)
+        self.refresh_box(   self.difficulty_box,            self.data_handler.get_difficulty(), NameData.difficultys)
+        self.refresh_check( self.autoCollect_check,         self.data_handler.get_autoCollect(False))
+        self.refresh_check( self.rechargeSpeed_check,       (self.data_handler.get_rechargeSpeed() != 1.0))
+        self.refresh_check( self.ignoreHugeWaveEvent_check, self.data_handler.get_ignoreHugeWaveEvent(False))
+        self.refresh_check( self.energyActive_check,        self.data_handler.get_energyActive(False))
+        self.refresh_check( self.blueprintsActive_check,    self.data_handler.get_blueprintsActive(False))
+        self.refresh_check( self.pickaxeActive_check,       self.data_handler.get_pickaxeActive(False))
+        self.refresh_check( self.starshardActive_check,     self.data_handler.get_starshardActive(False))
+        self.refresh_check( self.triggerActive_check,       self.data_handler.get_triggerActive(False))
 
         self.data_handler.check_missing()
 
@@ -459,12 +580,12 @@ class Numeric_Editor:
             messagebox.showerror("Error", f"Failed to read stageDefinitionID: {str(e)}")
 
     def refresh_input(self, input:ttk.Entry, get):
-        if input not in self.entry_vars:
+        if input not in self.vars:
             var = tk.StringVar()
             input.configure(textvariable=var)
-            self.entry_vars[input] = var
+            self.vars[input] = var
         if (get != None):
-            self.entry_vars[input].set(str(get))
+            self.vars[input].set(str(get))
             input.config(state="normal")
 
     def refresh_box(self, box:ttk.Combobox, get, type:NameData.BilingualDataset):
@@ -472,22 +593,37 @@ class Numeric_Editor:
             box.set(type.get_name(get))
             box.config(state="readonly")
 
-    def refresh_boolean_box(self, box:ttk.Combobox, get):
-        box.config(state="readonly")
-        if get:
-            box.set(get_text("True"))
-        else:
-            box.set(get_text("False"))
-
     def refresh_check(self, check:ttk.Checkbutton, get:bool):
-        if check not in self.entry_vars:
+        if check not in self.vars:
             var = tk.BooleanVar()
             check.configure(variable=var)
-            self.entry_vars[check] = var
+            self.vars[check] = var
         if (get != None):
-            self.entry_vars[check].set(get)
+            self.vars[check].set(bool(get))
             check.config(state="normal")
     # endregion
+
+class Grids_Editor:
+    def __init__(self, master, data_handler:DataHandler):
+        self.master = master
+        self.data_handler = data_handler
+        self.frame = tk.Frame(master)
+        self.frame.pack()
+        # self._setup_ui()
+
+    def refresh(self):
+        self.data_handler
+
+class EnemyPool_Editor:
+    def __init__(self, master, data_handler:DataHandler):
+        self.master = master
+        self.data_handler = data_handler
+        self.frame = tk.Frame(master)
+        self.frame.pack()
+        # self._setup_ui()
+
+    def refresh(self):
+        self.data_handler
 
 # region 通用UI组件
 
@@ -505,9 +641,9 @@ def add_input(frame, label:str, row, column, validatecommand):
     return input
 
 def add_check(frame, label:str, row, column, command):
-    check = ttk.Checkbutton(frame, text=get_text(label), state="disable")
-    check.grid(row=row, column=2*column, columnspan=2, sticky="ew", pady=12)
-    check.bind("<<CheckbuttonSelected>>", command)
+    check = ttk.Checkbutton(frame, text=get_text(label), state="disable", command=command)
+    check.grid(row=row, column=2*column, columnspan=2, sticky="ew", pady=12, padx=64)
+    return check
 
 
 # endregion
