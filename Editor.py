@@ -444,7 +444,7 @@ class DataHandler:
         
     def del_enemyPool(self):
         return (self.current_data['level']['properties'].pop('enemyPool'))["_v"]
-    # endergion
+    # endregion
 
     def check_missing(self):
         if self.missing:
