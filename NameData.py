@@ -28,7 +28,7 @@ _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
 _grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
 
-_text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0 by QoZnoS'
+_text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre1 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0-pre1 by QoZnoS'
     }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
     }, 'btn_save':                          {'zh': '保存文件', 'en': 'Execute the modification'
     }, 'label_user':                        {'zh': '当前用户：', 'en': 'current user: '
