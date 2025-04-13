@@ -424,6 +424,27 @@ class DataHandler:
         self.current_data['level']['grids'][enum]['definitionID'] = definitionID
     # endregion
 
+    # region EnemyPool
+    def get_enemyPool(self):
+        """返回出怪种类列表"""
+        try:
+            return list(self.current_data['level']['properties']['enemyPool']['_v'])
+        except:
+            return None
+    
+    def set_enemyPool(self, pool:list):
+        """替换出怪种类列表"""
+        self.current_data['level']['properties']['enemyPool']['_v'] = list(pool)
+
+    def fix_enemyPool(self):
+        """不存在出怪列表时添加出怪列表"""
+        self.current_data['level']['properties']['enemyPool'] = {
+                "_t": "PVZEngine.NamespaceID[], PVZEngine.Base",
+                "_v": []}
+        
+    def del_enemyPool(self):
+        return (self.current_data['level']['properties'].pop('enemyPool'))["_v"]
+    # endergion
 
     def check_missing(self):
         if self.missing:
@@ -548,26 +569,26 @@ class Numeric_Editor:
 
         self.vars = {}
         
-        self.stageDefinition_box        =add_box(frame_group,"label_chapter"                , 0, 0, NameData.maps.name_list, self.mix_stageDefinitionID)    # 章节
-        self.stageDefinitionID_box      =add_box(frame_group,"label_day"                    , 1, 0, NameData.level_day, self.mix_stageDefinitionID)         # 关卡
-        self.musicID_box                =add_box(frame_group,"label_musicID"                , 2, 0, NameData.musics.name_list, self.change_musicID)         # 背景音乐
-        self.flag_input                 =add_input(frame_group,"label_flag"                 , 3, 0, self.master.register(self.change_flag))                 # 旗帜
-        self.wave_input                 =add_input(frame_group,"label_wave"                 , 4, 0, self.master.register(self.change_wave))                 # 波数
-        self.energy_input               =add_input(frame_group,"label_energy"               , 0, 1, self.master.register(self.change_energy))               # 当前机械能
-        self.maxEnergy_input            =add_input(frame_group,"label_maxEnergy"            , 1, 1, self.master.register(self.change_maxEnergy))            # 机械能上限
-        self.starshardCount_input       =add_input(frame_group,"label_starshard"            , 2, 1, self.master.register(self.change_starshardCount))       # 星之碎片数
-        self.starshardSlotCount_input   =add_input(frame_group,"label_maxStarshard"         , 3, 1, self.master.register(self.change_starshardSlotCount))   # 星之碎片槽
-        self.conveyorSlotCount_input    =add_input(frame_group,"label_conveyorslot"         , 4, 1, self.master.register(self.change_conveyorSlotCount))    # 传送带槽数
-        self.difficulty_box             =add_box(frame_group,"label_difficulty"             , 0, 2, NameData.difficultys.name_list, self.change_difficulty) # 难度
-        self.autoCollect_check          =add_check(frame_group,"label_autoCollect"          , 1, 2, self.change_autoCollect)                                # 自动收集
-        self.rechargeSpeed_check        =add_check(frame_group,"label_rechargeSpeed"        , 2, 2, self.change_rechargeSpeed)                              # 蓝图无冷却
-        self.ignoreHugeWaveEvent_check  =add_check(frame_group,"label_ignoreHugeWaveEvent"  , 3, 2, self.change_ignoreHugeWaveEvent)                        # 忽略大波事件
-        self.isConveyorMode_check       =add_check(frame_group,"label_isConveyorMode"       , 4, 2, self.change_isConveyorMode)                             # 启用传送带
-        self.energyActive_check         =add_check(frame_group,"label_energyActive"         , 0, 3, self.change_energyActive)                               # 显示机械能
-        self.blueprintsActive_check     =add_check(frame_group,"label_blueprintsActive"     , 1, 3, self.change_blueprintsActive)                           # 显示蓝图
-        self.pickaxeActive_check        =add_check(frame_group,"label_pickaxeActive"        , 2, 3, self.change_pickaxeActive)                              # 启用镐子
-        self.starshardActive_check      =add_check(frame_group,"label_starshardActive"      , 3, 3, self.change_starshardActive)                            # 启用星之碎片
-        self.triggerActive_check        =add_check(frame_group,"label_triggerActive"        , 4, 3, self.change_triggerActive)                              # 启用驱动
+        self.stageDefinition_box        =add_box(frame_group,get_text("label_chapter")              , 0, 0, NameData.maps.name_list, self.mix_stageDefinitionID)    # 章节
+        self.stageDefinitionID_box      =add_box(frame_group,get_text("label_day")                  , 1, 0, NameData.level_day, self.mix_stageDefinitionID)         # 关卡
+        self.musicID_box                =add_box(frame_group,get_text("label_musicID")              , 2, 0, NameData.musics.name_list, self.change_musicID)         # 背景音乐
+        self.flag_input                 =add_input(frame_group,get_text("label_flag")               , 3, 0, self.master.register(self.change_flag))                 # 旗帜
+        self.wave_input                 =add_input(frame_group,get_text("label_wave")               , 4, 0, self.master.register(self.change_wave))                 # 波数
+        self.energy_input               =add_input(frame_group,get_text("label_energy")             , 0, 1, self.master.register(self.change_energy))               # 当前机械能
+        self.maxEnergy_input            =add_input(frame_group,get_text("label_maxEnergy")          , 1, 1, self.master.register(self.change_maxEnergy))            # 机械能上限
+        self.starshardCount_input       =add_input(frame_group,get_text("label_starshard")          , 2, 1, self.master.register(self.change_starshardCount))       # 星之碎片数
+        self.starshardSlotCount_input   =add_input(frame_group,get_text("label_maxStarshard")       , 3, 1, self.master.register(self.change_starshardSlotCount))   # 星之碎片槽
+        self.conveyorSlotCount_input    =add_input(frame_group,get_text("label_conveyorslot")       , 4, 1, self.master.register(self.change_conveyorSlotCount))    # 传送带槽数
+        self.difficulty_box             =add_box(frame_group,get_text("label_difficulty")           , 0, 2, NameData.difficultys.name_list, self.change_difficulty) # 难度
+        self.autoCollect_check          =add_check(frame_group,get_text("label_autoCollect")        , 1, 2, self.change_autoCollect)                                # 自动收集
+        self.rechargeSpeed_check        =add_check(frame_group,get_text("label_rechargeSpeed")      , 2, 2, self.change_rechargeSpeed)                              # 蓝图无冷却
+        self.ignoreHugeWaveEvent_check  =add_check(frame_group,get_text("label_ignoreHugeWaveEvent"), 3, 2, self.change_ignoreHugeWaveEvent)                        # 忽略大波事件
+        self.isConveyorMode_check       =add_check(frame_group,get_text("label_isConveyorMode")     , 4, 2, self.change_isConveyorMode)                             # 启用传送带
+        self.energyActive_check         =add_check(frame_group,get_text("label_energyActive")       , 0, 3, self.change_energyActive)                               # 显示机械能
+        self.blueprintsActive_check     =add_check(frame_group,get_text("label_blueprintsActive")   , 1, 3, self.change_blueprintsActive)                           # 显示蓝图
+        self.pickaxeActive_check        =add_check(frame_group,get_text("label_pickaxeActive")      , 2, 3, self.change_pickaxeActive)                              # 启用镐子
+        self.starshardActive_check      =add_check(frame_group,get_text("label_starshardActive")    , 3, 3, self.change_starshardActive)                            # 启用星之碎片
+        self.triggerActive_check        =add_check(frame_group,get_text("label_triggerActive")      , 4, 3, self.change_triggerActive)                              # 启用驱动
 
         # self.difficulty_box.config(width=6)
         # tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=4,column=6,ipadx=48)
@@ -653,7 +674,7 @@ class Numeric_Editor:
         except ValueError:
             return False
     
-    def change_isConveyorMode(self,event):
+    def change_isConveyorMode(self):
         """是否启用传送带，同时修改生成属性"""
         var = self.vars[self.isConveyorMode_check].get()
         self.data_handler.set_isConveyorMode(var)
@@ -680,12 +701,12 @@ class Numeric_Editor:
         var = self.difficulty_box.get()
         self.data_handler.set_difficulty(NameData.difficultys.get_id(var))
 
-    def change_autoCollect(self,event):
+    def change_autoCollect(self):
         """自动收集"""
         var = self.vars[self.autoCollect_check].get()
         self.data_handler.set_autoCollect(var)
     
-    def change_rechargeSpeed(self,event):
+    def change_rechargeSpeed(self):
         """蓝图无冷却"""
         var = self.vars[self.rechargeSpeed_check].get()
         if var:
@@ -693,7 +714,7 @@ class Numeric_Editor:
         else:
             self.data_handler.set_rechargeSpeed(1.0)
     
-    def change_ignoreHugeWaveEvent(self,event):
+    def change_ignoreHugeWaveEvent(self):
         """忽略大波事件"""
         var = self.vars[self.ignoreHugeWaveEvent_check].get()
         self.data_handler.set_ignoreHugeWaveEvent(var)
@@ -802,12 +823,12 @@ class Grids_Editor:
         self.frame.pack()
 
         self.grids = []
-        self.setup_ui()
+        self._setup_ui()
 
         self.start_label = tk.Label(self.frame, text=get_text("label_start_grid"))
         self.start_label.pack(pady=90)
 
-    def setup_ui(self):
+    def _setup_ui(self):
         self.ui = tk.Frame(self.frame)
         self.grid_id_box = ttk.Combobox(self.ui, values=NameData.grids.name_list, state="disable")
         self.grid_id_box.pack(pady=(0,12), fill=tk.X)
@@ -862,28 +883,79 @@ class EnemyPool_Editor:
         self.data_handler = data_handler
         self.frame = tk.Frame(master)
         self.frame.pack()
-        # self._setup_ui()
+
+        self.checks = []
+        self.vars = {}
+        self.pool = []
+        self._setup_ui()
+
+    def _setup_ui(self):
+        self.enable_enemyPool_check = add_check(self.frame, get_text('check_enemyPool'), 0, 0, self.enable_enemyPool_spawn)
+        var = tk.BooleanVar()
+        self.enable_enemyPool_check.configure(variable=var)
+        self.vars[self.enable_enemyPool_check] = var
+        i,j = 1,0
+        for id in NameData.spawns:
+            check = add_check(self.frame, NameData.blueprints.get_name(id), i, j, self.change_spawn)
+            self.checks.append((id, check))
+            i+=1
+            if i>4:
+                i=0
+                j+=1
+
+    def change_spawn(self):
+        self.pool.clear()
+        for id,check in self.checks:
+            if self.vars[check].get():
+                self.pool.append(id)
+        self.data_handler.set_enemyPool(self.pool)
+
+    def enable_enemyPool_spawn(self):
+        if self.vars[self.enable_enemyPool_check].get():
+            self.data_handler.fix_enemyPool()
+            self.data_handler.set_enemyPool(self.pool)
+            self.refresh()
+        else:
+            self.pool = self.data_handler.del_enemyPool()
+            self.refresh()
 
     def refresh(self):
-        self.data_handler
+        self.enable_enemyPool_check.config(state="normal")
+        for id,check in self.checks:
+            if check not in self.vars:
+                var = tk.BooleanVar()
+                check.configure(variable=var)
+                self.vars[check] = var
+        
+        pool = self.data_handler.get_enemyPool()
+        if(pool == None):
+            self.vars[self.enable_enemyPool_check].set(False)
+            for id,check in self.checks:
+                check.config(state="disable")
+            return
+
+        self.vars[self.enable_enemyPool_check].set(True)
+        for id,check in self.checks:
+            self.vars[check].set(bool(pool.count(id) != 0))
+            check.config(state="normal")
 
 # region 通用UI组件
 
 def add_box(frame, label:str, row, column, value:list, command):
-    tk.Label(frame, text=get_text(label)).grid(row=row, column=2*column, sticky="e", pady=12)
+    tk.Label(frame, text=label).grid(row=row, column=2*column, sticky="e", pady=12)
     box = ttk.Combobox(frame, values=value, state="disable", width=16)
     box.grid(row=row, column=2*column+1, sticky="ew", pady=12)
     box.bind("<<ComboboxSelected>>", command)
     return box
 
 def add_input(frame, label:str, row, column, validatecommand):
-    tk.Label(frame, text=get_text(label)).grid(row=row, column=2*column, sticky="e", pady=12)
+    tk.Label(frame, text=label).grid(row=row, column=2*column, sticky="e", pady=12)
     input = ttk.Entry(frame, state="disable", validate='key',validatecommand=(validatecommand, '%d', '%i', '%P', '%s', '%v', '%V', '%W'),width=16)
     input.grid(row=row, column=2*column+1, sticky="ew", pady=12)
     return input
 
 def add_check(frame, label:str, row, column, command):
-    check = ttk.Checkbutton(frame, text=get_text(label), state="disable", command=command)
+    check = ttk.Checkbutton(frame, text=label, state="disable", command=command)
     check.grid(row=row, column=2*column, columnspan=2, sticky="ew", pady=12, padx=64)
     return check
 

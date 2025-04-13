@@ -76,6 +76,7 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0 by 
     }, 'page_Grids_Editor':                 {'zh': '网格', 'en':'Grids'
     }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
     }, 'label_start_grid':                  {'zh': '请先选择存档', 'en':'Please choose a level file to start'
+    }, 'check_enemyPool':                   {'zh': '启用无尽出怪', 'en':'Enable Endless Spawn'
     }
 }
 
@@ -202,3 +203,5 @@ grids = BilingualDataset(_grid_id, _gird_name_zh, _gird_name_en)
 texts = TextManager(_text_data)
 
 bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])
+
+spawns = ['mvz2:zombie', 'mvz2:leather_capped_zombie', 'mvz2:iron_helmetted_zombie', 'mvz2:flag_zombie', 'mvz2:skeleton', 'mvz2:ghost', 'mvz2:mummy', 'mvz2:necromancer', 'mvz2:spider', 'mvz2:cave_spider', 'mvz2:ghast', 'mvz2:mother_terror', 'mvz2:mesmerizer', 'mvz2:berserker', 'mvz2:dullahan', 'mvz2:hell_chariot', 'mvz2:mutant_zombie', 'mvz2:mega_mutant_zombie']
