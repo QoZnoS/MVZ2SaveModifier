@@ -24,6 +24,10 @@ _difficulty_name_zh = ['简单', '普通', '困难']
 _difficulty_name_en = ['Eazy', 'Normal', 'Hard']
 _difficulty_id = ['mvz2:eazy', "mvz2:normal", "mvz2:hard"]
 
+_gird_name_zh = ['草地', '水路', '木板']
+_gird_name_en = ['grass', 'water', 'wood']
+_grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
+
 _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0 by QoZnoS'
     }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
     }, 'btn_save':                          {'zh': '保存文件', 'en': 'Execute the modification'
@@ -31,8 +35,8 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0 by 
     }, 'btn_switch':                        {'zh': '切换', 'en': 'switch'
     }, 'btn_unzip':                         {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
     }, 'btn_zip':                           {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
-    }, 'label_lvl_null':                    {'zh': '当前文件：未选择', 'en': 'current level: empty'
-    }, 'btn_lvl':                           {'zh': '选择文件', 'en': 'Select level file'
+    }, 'label_lvl_null':                    {'zh': '当前存档：未选择', 'en': 'current level: empty'
+    }, 'btn_lvl':                           {'zh': '选择存档', 'en': 'Select level file'
     }, 'btn_page':                          {'zh': '切换界面', 'en': 'Another page'
     }, 'tree_artifact':                     {'zh': '制品名称', 'en': 'Artifact name'
     }, 'btn_add':                           {'zh': '添加', 'en': 'Add'
@@ -71,6 +75,7 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0 by 
     }, 'page_Artifact_Blueprint_Editor':    {'zh': '蓝图/制品', 'en':'Artifact/Blueprint'
     }, 'page_Grids_Editor':                 {'zh': '网格', 'en':'Grids'
     }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
+    }, 'label_start_grid':                  {'zh': '请先选择存档', 'en':'Please choose a level file to start'
     }
 }
 
@@ -193,6 +198,7 @@ artifacts = BilingualDataset(_artifact_id, _artifact_name_zh, _artifact_name_en)
 blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name_en)
 musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
 difficultys = BilingualDataset(_difficulty_id, _difficulty_name_zh, _difficulty_name_en)
+grids = BilingualDataset(_grid_id, _gird_name_zh, _gird_name_en)
 texts = TextManager(_text_data)
 
 bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])

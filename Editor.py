@@ -415,6 +415,15 @@ class DataHandler:
         return _id
     # endregion
 
+    # region gird
+    def get_grids(self):
+        """返回网格的原始列表"""
+        return list(self.current_data['level']['grids'])
+    
+    def set_grid_definitionID_by_enum(self, enum, definitionID):
+        self.current_data['level']['grids'][enum]['definitionID'] = definitionID
+    # endregion
+
 
     def check_missing(self):
         if self.missing:
@@ -422,6 +431,9 @@ class DataHandler:
             for label in self.missing_log:
                 misslabel = misslabel + label + "\n"
             messagebox.showinfo(get_text('info_missing'), misslabel)
+
+# 2.0版本完成分页重构
+# 3.0版本实现可视化编辑
 
 # 各个分页
 # 准备重做
@@ -788,10 +800,61 @@ class Grids_Editor:
         self.data_handler = data_handler
         self.frame = tk.Frame(master)
         self.frame.pack()
-        # self._setup_ui()
+
+        self.grids = []
+        self.setup_ui()
+
+        self.start_label = tk.Label(self.frame, text=get_text("label_start_grid"))
+        self.start_label.pack(pady=90)
+
+    def setup_ui(self):
+        self.ui = tk.Frame(self.frame)
+        self.grid_id_box = ttk.Combobox(self.ui, values=NameData.grids.name_list, state="disable")
+        self.grid_id_box.pack(pady=(0,12), fill=tk.X)
+        self.grid_id_btn = tk.Button(self.ui, text=get_text("btn_modify"), command=self.change_grid, width=24)
+        self.grid_id_btn.pack(fill=tk.X)
+
+    def create_grid(self):
+        grids = tk.Frame(self.frame)
+        grids.pack(side=tk.LEFT, padx=10, expand=True)
+
+        for grid in self.data_handler.get_grids():
+            enum = grid['lane']*9 + grid['column']
+            text = NameData.grids.get_name(grid['definitionID'])
+            var = tk.BooleanVar()
+            btn = tk.Button(grids, text=text, width=5, height=2, bg="white", command=lambda enum=enum: self.toggle_grid(enum))
+            btn.grid(row=grid['lane'], column=grid['column'])
+            self.grids.append((var, btn))
+
+    # region 回调
+    def toggle_grid(self, enum):
+        """网格选中"""
+        var, btn = self.grids[enum]
+        var.set(not var.get())
+        color = "lightgreen" if var.get() == 1 else "white"
+        btn.config(bg=color)
+        # btn.config(image=image)
+
+    def change_grid(self):
+        if not self.grid_id_box.get():
+            return
+        definitionID = NameData.grids.get_id(self.grid_id_box.get())
+        for i in range(len(self.grids)):
+            var = self.grids[i][0]
+            if var.get():
+                self.data_handler.set_grid_definitionID_by_enum(i, definitionID)
+                self.grids[i][1].config(text=NameData.grids.get_name(definitionID))
+    # endregion
 
     def refresh(self):
-        self.data_handler
+        if len(self.grids) != 0:
+            self.grids[0][1].master.destroy()
+            self.grids.clear()
+        self.create_grid()
+        self.ui.pack(side=tk.RIGHT, padx=10, expand=True)
+        self.grid_id_box.config(state="readonly")
+        self.grid_id_box.set(NameData.grids.name_list[0])
+        self.start_label.destroy()
 
 class EnemyPool_Editor:
     def __init__(self, master, data_handler:DataHandler):
