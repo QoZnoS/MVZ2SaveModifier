@@ -15,7 +15,7 @@ class DataHandler:
         self.missing = False
         self.missing_log = [] # 储存数据读取失败信息
 
-    # 设计原则：set应只出现在回调中，防止存档数据被意外修改
+    # 设计原则：set/add/del 应只出现在回调中，防止存档数据被意外修改
 
     # region numeric
     def set_stageDefinitionID(self, value:str):
@@ -280,6 +280,142 @@ class DataHandler:
 
     # endregion
 
+    # region artifact
+    def get_artifact(self):
+        """获取制品的原始列表"""
+        return list(self.current_data['level']['components']['mvz2:artifact']['artifacts']['artifacts'])
+
+    def add_artifact(self, arti:dict):
+        """添加制品"""
+        self.current_data['level']['components']['mvz2:artifact']['artifacts']['artifacts'].append(arti)
+
+    def del_artifact(self, enum:int):
+        """删除指定项制品"""
+        del self.current_data['level']['components']['mvz2:artifact']['artifacts']['artifacts'][enum]
+
+    def new_artifact(self, definitionID:str):
+        """返回一个新制品"""
+        if definitionID == "None":
+            new_artifact = None
+        else:
+            new_artifact = { "definitionID":definitionID,
+            "propertyDict": {"properties": {}},
+            "auras": [{"updateTimer":{},"buffs":[]},
+                      {"_id":1,"updateTimer":{},"buffs":[]}]}
+        return new_artifact
+    # 兼容函数
+    def get_artifact_definitionID_list(self):
+        """获取制品的definitionID列表"""
+        definitionID_list = []
+        for arti in self.get_artifact():
+            try:
+                definitionID_list.append(arti["definitionID"])
+            except:
+                definitionID_list.append("None")
+        return definitionID_list
+
+    # endregion
+
+    # region blueprint
+    def get_seedPacks(self):
+        """返回seedPacks原始列表"""
+        return list(self.current_data['level']['seedPacks'])
+
+    def set_seedID_by_enum(self, enum, seedID):
+        self.current_data['level']['seedPacks'][enum]['seedID'] = seedID
+    # 兼容函数
+    def get_seedID_list(self):
+        seedID_list = []
+        for seed in self.get_seedPacks():
+            try:
+                seedID_list.append(seed['seedID'])
+            except:
+                break
+        return seedID_list
+    # 兼容函数
+    def fix_seed_auras(self, enum):
+        """处理紫卡"""
+        if len(self.current_data['level']['seedPacks'][enum]['auras'])==0:
+            self.current_data['level']['seedPacks'][enum]['auras'].append(
+                    {
+                        "updateTimer": {
+                            "maxFrame": 1,
+                            "lastFrame": 1,
+                            "lastFrameFraction": 0,
+                            "frame": 1,
+                            "frameFraction": 0,
+                            "precision": 2048
+                        },
+                        "buffs": []
+                    }
+            )
+
+
+    # endregion
+
+    # region level_buff
+    def get_level_buff(self):
+        """返回原始buff列表"""
+        return list(self.current_data['level']['buffs']['buffs'])
+
+    def add_level_buff(self, buff:dict):
+        """添加buff"""
+        self.current_data['level']['buffs']['buffs'].append(buff)
+
+    def del_level_buff_by_enum(self, enum:int):
+        """删除buff中指定项"""
+        del self.current_data['level']['buffs']['buffs'][enum]
+
+    def new_level_buff(self, definitionID:str):
+        """返回一个新buff"""
+        new_buff ={"_id": ["NumberLong", self.get_level_buff_next_id()],
+                    "definitionID": definitionID,
+                    "propertyDict": {"properties": {}},
+                    "auras": [{"updateTimer": {},"buffs": []}]}
+        return new_buff
+
+    def get_level_buff_definitionID_list(self):
+        """返回关卡 buff definitionID 列表"""
+        definitionID_list = []
+        for buff in self.get_level_buff():
+            definitionID_list.append(buff["definitionID"])
+        return definitionID_list
+    
+    def get_level_buff_by_enum(self, enum:int):
+        """返回指定序号的buff整体"""
+        try:
+            return dict(self.get_level_buff()[enum])
+        except:
+            return None
+
+    def get_level_buff_by_id(self, id:int):
+        """返回首个_id匹配的buff整体"""
+        for buff in self.get_level_buff():
+            if buff["_id"][1] == id:
+                return dict(buff)
+        else:
+            return None
+    # 兼容函数
+    def get_level_buff_enum_by_id(self, id:int):
+        """返回首个_id匹配的buff的enum"""
+        enum = 0
+        for buff in self.get_level_buff():
+            if buff["_id"][1] == id:
+                return enum
+            else:
+                enum += 1
+        else:
+            return None
+
+    def get_level_buff_next_id(self):
+        """返回下一个生成的buff的id"""
+        _id = 1
+        while (self.get_level_buff_by_id(_id) != None):
+            _id += 1
+        return _id
+    # endregion
+
+
     def check_missing(self):
         if self.missing:
             misslabel = str()
@@ -288,7 +424,7 @@ class DataHandler:
             messagebox.showinfo(get_text('info_missing'), misslabel)
 
 # 各个分页
-
+# 准备重做
 class Artifact_Blueprint_Editor:
     def __init__(self, master, data_handler:DataHandler):
         self.master = master
@@ -327,21 +463,64 @@ class Artifact_Blueprint_Editor:
         blueprint_control_frame.pack(side=tk.RIGHT, padx=10)
         self.blueprint_box = ttk.Combobox(blueprint_control_frame, values=NameData.blueprints.name_list, state="disabled", width=20)
         self.blueprint_box.pack(pady=(0, 12))
-        # tk.Button(blueprint_control_frame, text="添加", width=8).pack(fill=tk.X, pady=12)
         tk.Button(blueprint_control_frame, text=get_text("btn_modify"), width=8, command=self.modify_blueprint).pack(fill=tk.X, pady=12)
-        # tk.Button(blueprint_control_frame, text="删除", width=8).pack(fill=tk.X, pady=12)
 
+    # region 响应回调
     def add_artifact(self):
-        print("1")
+        definitionID = NameData.artifacts.get_id(self.artifact_box.get())
+        artifact = self.data_handler.new_artifact(definitionID)
+        self.data_handler.add_artifact(artifact)
+        self.refresh_artifact()
 
     def remove_artifact(self):
-        print("2")
+        if not self.artifact_tree.selection():
+            return
+        enum = self.artifact_tree.item(self.artifact_tree.selection()[0])["values"][0]
+        arti = self.data_handler.get_artifact()[enum]
+        if len(arti['auras'])!=0:
+            for auras in arti['auras']:
+                for buff in auras['buffs']:
+                    if buff['_t']!="BuffReferenceLevel":
+                        continue
+                    buff_enum = self.data_handler.get_level_buff_enum_by_id(buff['buffId'][1])
+                    self.data_handler.del_level_buff_by_enum(buff_enum)
+        self.data_handler.del_artifact(enum)
+        self.refresh_artifact()
 
     def modify_blueprint(self):
-        print("2")
+        if not self.blueprint_tree.selection():
+            return
+        enum = self.blueprint_tree.item(self.blueprint_tree.selection()[0])["values"][0]
+        self.data_handler.set_seedID_by_enum(enum, NameData.blueprints.get_id(self.blueprint_box.get()))
+        self.data_handler.fix_seed_auras(enum)
+        self.refresh_blueprint()
+    # endregion
 
+    # region 刷新
     def refresh(self):
-        self.data_handler
+        self.artifact_box.config(state="readonly")
+        self.artifact_box.set(NameData.artifacts.name_list[0])
+        self.blueprint_box.config(state="readonly")
+        self.blueprint_box.set(NameData.blueprints.name_list[0])
+        self.refresh_artifact()
+        self.refresh_blueprint()
+
+    def refresh_artifact(self):
+        """刷新制品列表"""
+        data_artifact = self.data_handler.get_artifact_definitionID_list()
+        self.artifact_tree.delete(*self.artifact_tree.get_children())
+        for i in range(len(data_artifact)):
+            if data_artifact[i]:
+                self.artifact_tree.insert("", "end", values=(i, NameData.artifacts.get_name(data_artifact[i])))
+
+    def refresh_blueprint(self):
+        """刷新蓝图列表"""
+        data_blueprint = self.data_handler.get_seedID_list()
+        self.blueprint_tree.delete(*self.blueprint_tree.get_children())
+        for i in range(len(data_blueprint)):
+            if data_blueprint[i]:
+                self.blueprint_tree.insert("", "end", values=(i, NameData.blueprints.get_name(data_blueprint[i])))
+    # endregion
 
 class Numeric_Editor:
     def __init__(self, master, data_handler:DataHandler):
