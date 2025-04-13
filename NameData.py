@@ -28,7 +28,7 @@ _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
 _grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
 
-_text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre1 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0-pre1 by QoZnoS'
+_text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre2 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0-pre2 by QoZnoS'
     }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
     }, 'btn_save':                          {'zh': '保存文件', 'en': 'Execute the modification'
     }, 'label_user':                        {'zh': '当前用户：', 'en': 'current user: '
@@ -64,7 +64,7 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre
     }, 'label_rechargeSpeed':               {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
     }, 'label_ignoreHugeWaveEvent':         {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
     }, 'label_difficulty':                  {'zh': '难度：', 'en': 'difficulty: '
-    }, 'btn_about':                         {'zh': '关于修改器', 'en': 'About SaveModifier'
+    }, 'btn_help':                          {'zh': '使用说明', 'en': 'Instructions'
     }, 'True':                              {'zh': '是', 'en': 'True'
     }, 'False':                             {'zh': '否', 'en': 'False'
     }, 'status_save':                       {'zh': '已保存到：', 'en': 'Save to: '
@@ -77,12 +77,73 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre
     }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
     }, 'label_start_grid':                  {'zh': '请先选择存档', 'en':'Please choose a level file to start'
     }, 'check_enemyPool':                   {'zh': '启用无尽出怪', 'en':'Enable Endless Spawn'
+    }, 'help_1':                            {'zh': '声明：使用该软件造成的文件损坏，作者本人一概不负责\n', 'en':'Disclaimer: The author is not responsible for any file damage caused by the use of this software.\n'
+    }, 'help_2':                            {'zh': '改修改器不支持直接修改游戏进程，仅支持修改退出关卡时保存的关卡存档文件\n', 'en':'The editor does not support directly modifying the game process, but only supports modifying the level archive file saved when exiting the level..\n'
+    }, 'help_3':                            {'zh': '这意味着你需要进入关卡，并且中途退出，才能在选择存档界面看到你的存档\n', 'en':'This means you need to enter the level and exit midway to see your save file on the save file selection interface.\n'
+    }, 'help_4':                            {'zh': '加载存档后，修改器会将存档数据全部写入修改器内存中\n', 'en':'After loading the archive, the modifier will write all the archive data into the modifier memory.\n'
+    }, 'help_5':                            {'zh': '在不点击任何选择框/输入框/选项/按钮的情况下，修改器不会对存档进行任何修改\n', 'en':'Without clicking any selection box/input box/option/button, the editor will not make any changes to the archive.\n'
+    }, 'help_6':                            {'zh': '场景地图和进入关卡的入口与文件名关联，若想修改请打开存档文件夹自行修改文件名', 'en':'The scene map and the entrance to the level are associated with the file name. If you want to modify it, please open the archive folder and modify the file name yourself.\n'
+    }, 'help_link1':                        {'zh': '游戏作者主页', 'en':'Game author homepage'
+    }, 'help_link2':                        {'zh': '修改器作者主页', 'en':'Modifier Author Home Page'
+    }, 'help_link3':                        {'zh': '修改器源码', 'en':'Modifier Github Page'
     }
 }
 
 _language = "zh"
 
-import winreg,Window
+import winreg
+import tkinter as tk
+from tkinter import ttk
+
+# 选择语言窗口
+class LanguageSelector:
+    def __init__(self, on_select):
+        self.on_select = on_select
+
+        self.root = tk.Tk()
+        self.root.withdraw()
+
+        # 窗口设置
+        self.selector = tk.Toplevel()
+        self.selector.title("Oops")
+        self.selector.geometry("400x240")
+        self.selector.grab_set()
+
+        # 主容器
+        container = ttk.Frame(self.selector)
+        container.pack(padx=20, pady=20, fill="both", expand=True)
+        
+        # 文字信息
+        text_content = """
+Failed to read language setting
+It looks like you are using a language pack
+未能成功读取游戏语言设置
+您似乎正在使用语言包
+Choose your language/请选择语言
+"""
+        
+        lbl_info = tk.Label(
+            container,
+            text=text_content,
+            justify="center",
+            wraplength=350
+        )
+        lbl_info.pack(pady=10)
+
+        btnframe = tk.Frame(container)
+        btnframe.pack()
+        tk.Button(btnframe, text="English", command=lambda:self.on_close("en")).pack(side=tk.LEFT, padx=5)
+        tk.Button(btnframe, text="简体中文", command=lambda:self.on_close("zh")).pack(side=tk.LEFT, padx=5)
+        # 窗口关闭时退出程序
+        self.selector.protocol("WM_DELETE_WINDOW", lambda:self.on_close('zh'))
+        
+        # 等待用户选择
+        self.root.wait_window(self.selector)
+
+    def on_close(self, lang):
+        self.on_select(lang)
+        self.selector.destroy()
+        self.root.destroy()
 
 def get_language():
     key_path = r"Software\\Cuerzor\\MinecraftVSZombies2"
@@ -115,9 +176,11 @@ def set_language(lang):
         _language = "en"
 
 def choose_language():
-    Window.LanguageSelector(on_select=set_language)
+    LanguageSelector(on_select=set_language)
+
 
 get_language()
+
 
 class BilingualDataset:
     """双语数据集（ID↔名称双向查询）保留原始列表的同时构建索引"""

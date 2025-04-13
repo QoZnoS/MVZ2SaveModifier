@@ -590,7 +590,6 @@ class Numeric_Editor:
         self.starshardActive_check      =add_check(frame_group,get_text("label_starshardActive")    , 3, 3, self.change_starshardActive)                            # 启用星之碎片
         self.triggerActive_check        =add_check(frame_group,get_text("label_triggerActive")      , 4, 3, self.change_triggerActive)                              # 启用驱动
 
-        # self.difficulty_box.config(width=6)
         # tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=4,column=6,ipadx=48)
 
     # region 响应回调
@@ -743,11 +742,6 @@ class Numeric_Editor:
         """启用驱动"""
         var = self.vars[self.triggerActive_check].get()
         self.data_handler.set_triggerActive(var)
-
-    def open_about(self):
-        """关于"""
-        Window.AboutWindow(self.master)
-
     # endregion
 
     # region 刷新，读取参数

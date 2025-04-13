@@ -8,7 +8,7 @@ def get_save_path():
     '''根据系统返回userdata路径'''
     system = platform.system()
     if system == "Windows":
-        return os.path.expandvars(r"%HOMEPATH%\AppData\LocalLow\Cuerzor\MinecraftVSZombies2\userdata")
+        return os.path.expandvars("C:\\" + r"%HOMEPATH%\\AppData\\LocalLow\\Cuerzor\\MinecraftVSZombies2\\userdata")
     elif system == "Darwin":  # macOS
         return os.path.expanduser("~/Library/Application Support/Cuerzor/MinecraftVSZombies2/userdata")
     else:  # Linux
@@ -86,6 +86,7 @@ class ArchiveEditor:
         self.filename_label.pack(side=tk.LEFT)
         tk.Button(self.frame_file, text=get_text("btn_lvl"), command=self.open_save_selector).pack(side=tk.LEFT, padx=10)
         tk.Button(self.frame_file, text=get_text("btn_open_explorer"), command=self.open_save_explorer).pack(side=tk.LEFT, padx=10)
+        tk.Button(self.frame_file, text=get_text("btn_help"),command=self.open_help).pack(side=tk.LEFT, padx=10)
         # 混乱选项
         
     # 处理文件窗口
@@ -121,6 +122,9 @@ class ArchiveEditor:
         self.currentUserIndex = selected_user
         self.username = self.users['metas'][self.currentUserIndex]['username']
         self.username_label.config(text=get_text("label_user") + self.username)
+    # 帮助窗口
+    def open_help(self):
+        Window.HelpWindow(self.root)
     # 保存文件
     def output_file(self):
         save_dir=get_save_path() + f"\\user{self.currentUserIndex}\\mvz2\\level\\" + os.path.basename(self.current_file)

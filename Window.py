@@ -2,6 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import os
 import webbrowser
+import NameData
+
+def get_text(id):
+    """获取文本"""
+    return NameData.texts.get_name(id)
+
 
 # 存档选择窗口
 class SaveFileSelector(tk.Toplevel):
@@ -140,13 +146,12 @@ class UserSelector(tk.Toplevel):
         self.destroy()
 
 # 关于
-class AboutWindow:
+class HelpWindow:
     def __init__(self, parent):
         # 创建顶级窗口
         self.window = tk.Toplevel(parent)
         self.window.title("About")
-        self.window.geometry("400x320")
-        self.window.resizable(False, False)  # 禁止调整大小
+        self.window.geometry("600x400")
         
         # 设置窗口图标（可选）
         # self.window.iconbitmap("icon.ico")
@@ -156,32 +161,29 @@ class AboutWindow:
         container.pack(padx=20, pady=20, fill="both", expand=True)
         
         # 文字信息
-        text_content = """
-声明：使用该软件造成的文件损坏，作者本人一概不负责
-Disclaimer: The author is not responsible for any file damage caused by the use of this software
-"""
+        text_content = get_text('help_1') + get_text('help_2') + get_text('help_3') + get_text('help_4') + get_text('help_5') + get_text('help_6')
         
         lbl_info = ttk.Label(
             container,
             text=text_content,
             justify="center",
-            wraplength=350
+            wraplength=600
         )
         lbl_info.pack(pady=10)
         
         # 链接按钮容器
-        link_frame = ttk.Frame(container)
+        link_frame = tk.Frame(container)
         link_frame.pack(pady=15)
         
         # 创建链接按钮
         links = [
-            ("游戏作者主页/Game author homepage", "https://space.bilibili.com/348514"),
-            ("修改器作者主页/Modifier Author Home Page", "https://space.bilibili.com/404359179"),
-            ("修改器源码/Modifier source code", "https://github.com/QoZnoS/MVZ2SaveModifier")
+            (get_text('help_link1'), "https://space.bilibili.com/348514"),
+            (get_text('help_link2'), "https://space.bilibili.com/404359179"),
+            (get_text('help_link3'), "https://github.com/QoZnoS/MVZ2SaveModifier")
         ]
         
         for text, url in links:
-            btn = ttk.Button(
+            btn = tk.Button(
                 link_frame,
                 text=text,
                 width=48,
@@ -193,52 +195,3 @@ Disclaimer: The author is not responsible for any file damage caused by the use 
         """打开外部链接"""
         webbrowser.open_new(url)
 
-# 选择语言窗口
-class LanguageSelector:
-    def __init__(self, on_select):
-        self.on_select = on_select
-
-        self.root = tk.Tk()
-        self.root.withdraw()
-
-        # 窗口设置
-        self.selector = tk.Toplevel()
-        self.selector.title("Oops")
-        self.selector.geometry("400x240")
-        self.selector.grab_set()
-
-        # 主容器
-        container = ttk.Frame(self.selector)
-        container.pack(padx=20, pady=20, fill="both", expand=True)
-        
-        # 文字信息
-        text_content = """
-Failed to read language setting
-It looks like you are using a language pack
-未能成功读取游戏语言设置
-您似乎正在使用语言包
-Choose your language/请选择语言
-"""
-        
-        lbl_info = tk.Label(
-            container,
-            text=text_content,
-            justify="center",
-            wraplength=350
-        )
-        lbl_info.pack(pady=10)
-
-        btnframe = tk.Frame(container)
-        btnframe.pack()
-        tk.Button(btnframe, text="English", command=lambda:self.on_close("en")).pack(side=tk.LEFT, padx=5)
-        tk.Button(btnframe, text="简体中文", command=lambda:self.on_close("zh")).pack(side=tk.LEFT, padx=5)
-        # 窗口关闭时退出程序
-        self.selector.protocol("WM_DELETE_WINDOW", lambda:self.on_close('zh'))
-        
-        # 等待用户选择
-        self.root.wait_window(self.selector)
-
-    def on_close(self, lang):
-        self.on_select(lang)
-        self.selector.destroy()
-        self.root.destroy()
