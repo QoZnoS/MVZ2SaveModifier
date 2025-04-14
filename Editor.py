@@ -510,6 +510,10 @@ class Artifact_Blueprint_Editor:
             return
         enum = self.artifact_tree.item(self.artifact_tree.selection()[0])["values"][0]
         arti = self.data_handler.get_artifact()[enum]
+        if arti == None:
+            self.data_handler.del_artifact(enum)
+            self.refresh_artifact()
+            return
         if len(arti['auras'])!=0:
             for auras in arti['auras']:
                 for buff in auras['buffs']:
