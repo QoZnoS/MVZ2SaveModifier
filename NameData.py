@@ -21,8 +21,8 @@ _musics_name_en = ["Crazy Dave", "Choose Your Seeds", "Grasswalk", "Lexonomicon 
 _musics_id = ['mvz2:mainmenu', 'mvz2:choosing', 'mvz2:day', 'mvz2:halloween', 'mvz2:halloween_map', 'mvz2:minigame', 'mvz2:ultimate_battle', 'mvz2:halloween_boss', 'mvz2:dream_level', 'mvz2:dream_map', 'mvz2:suspension', 'mvz2:nightmare_map', 'mvz2:nightmare_level', 'mvz2:nightmare_final', 'mvz2:nightmare_boss', 'mvz2:nightmare_boss2', 'mvz2:gensokyo_map', 'mvz2:distress', 'mvz2:castle_map', 'mvz2:castle_level', 'mvz2:phone_ring', 'mvz2:seija', 'mvz2:sad_shinmyoumaru', 'mvz2:castle_final', 'mvz2:wither_boss']
 
 _difficulty_name_zh = ['简单', '普通', '困难']
-_difficulty_name_en = ['Eazy', 'Normal', 'Hard']
-_difficulty_id = ['mvz2:eazy', "mvz2:normal", "mvz2:hard"]
+_difficulty_name_en = ['Easy', 'Normal', 'Hard']
+_difficulty_id = ['mvz2:easy', "mvz2:normal", "mvz2:hard"]
 
 _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
