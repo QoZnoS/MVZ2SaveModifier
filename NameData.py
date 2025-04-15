@@ -91,11 +91,11 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre
 
 _language = "zh"
 
+# region 选择语言窗口
 import winreg
 import tkinter as tk
 from tkinter import ttk
 
-# 选择语言窗口
 class LanguageSelector:
     def __init__(self, on_select):
         self.on_select = on_select
@@ -178,9 +178,8 @@ def set_language(lang):
 def choose_language():
     LanguageSelector(on_select=set_language)
 
-
 get_language()
-
+# endregion
 
 class BilingualDataset:
     """双语数据集（ID↔名称双向查询）保留原始列表的同时构建索引"""

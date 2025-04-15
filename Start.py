@@ -2,17 +2,15 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import gzip,shutil,os,json,subprocess,platform
 import CustonJson,Window,NameData,Editor
-
+# setting = json.load(open("setting.json"))
 #region 全局函数
 def get_save_path():
     '''根据系统返回userdata路径'''
     system = platform.system()
     if system == "Windows":
         return os.path.expandvars("C:\\" + r"%HOMEPATH%\\AppData\\LocalLow\\Cuerzor\\MinecraftVSZombies2\\userdata")
-    elif system == "Darwin":  # macOS
-        return os.path.expanduser("~/Library/Application Support/Cuerzor/MinecraftVSZombies2/userdata")
-    else:  # Linux
-        return os.path.expanduser("~/.config/unity3d/Cuerzor/MinecraftVSZombies2/userdata")
+    # else:
+    #     return setting["base_path"]
 
 def get_text(id):
     """获取文本"""

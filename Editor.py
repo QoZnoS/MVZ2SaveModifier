@@ -1,7 +1,6 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext, ttk
-import gzip,shutil,os,json,winreg,subprocess
-import CustonJson,Window,NameData
+from tkinter import messagebox, ttk
+import NameData
 
 def get_text(id):
     """获取文本"""
