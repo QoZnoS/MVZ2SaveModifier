@@ -30,6 +30,7 @@ A graphical tool for editing *MinecraftVSZombies2* game saves, supporting numeri
 1. **克隆仓库**
 
 2. **添加 setting.json**
+
 新建一个 setting.json 文件，并向其中添加存档读取路径，比如：
    ```json
    {
@@ -39,11 +40,13 @@ A graphical tool for editing *MinecraftVSZombies2* game saves, supporting numeri
 
 3. **修改相关代码**
 - 在 Start.py 中，取消第5行，第12行和第13行的注释
-- 替换 Start.py 中所有双重反斜杠(\\)为正斜杠(/)
+- 替换 Start.py 中所有双重反斜杠(\\\\)为正斜杠(/)
 - 在 NameData.py 中，删除"语言选择窗口"的全部内容（2.0版本为94~182行）
 
 4. **运行脚本**
+
 在 Pydroid 3 中运行 Start.py
+
 ---
 
 ## 免责声明 / Disclaimer
