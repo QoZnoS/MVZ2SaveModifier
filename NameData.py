@@ -28,54 +28,20 @@ _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
 _grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
 
-_text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre2 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0-pre2 by QoZnoS'
-    }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
+_text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre2 by QoZnoS', 'en': 'MVZ2SaveModifier v2.0-pre2 by QoZnoS'
+    }, 'False':                             {'zh': '否', 'en': 'False'
+    }, 'True':                              {'zh': '是', 'en': 'True'
+    }, 'btn_add':                           {'zh': '添加', 'en': 'Add'
+    }, 'btn_delete':                        {'zh': '删除', 'en': 'Delete'
+    }, 'btn_help':                          {'zh': '使用说明', 'en': 'Instructions'
+    }, 'btn_lvl':                           {'zh': '选择存档', 'en': 'Select level file'
+    }, 'btn_modify':                        {'zh': '修改', 'en': 'Modify'
+    }, 'btn_open_explorer':                 {'zh': '打开存档文件夹', 'en': 'View in Explorer'
+    }, 'btn_page':                          {'zh': '切换界面', 'en': 'Another page'
     }, 'btn_save':                          {'zh': '保存文件', 'en': 'Execute the modification'
-    }, 'label_user':                        {'zh': '当前用户：', 'en': 'current user: '
     }, 'btn_switch':                        {'zh': '切换', 'en': 'switch'
     }, 'btn_unzip':                         {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
     }, 'btn_zip':                           {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
-    }, 'label_lvl_null':                    {'zh': '当前存档：未选择', 'en': 'current level: empty'
-    }, 'btn_lvl':                           {'zh': '选择存档', 'en': 'Select level file'
-    }, 'btn_page':                          {'zh': '切换界面', 'en': 'Another page'
-    }, 'tree_artifact':                     {'zh': '制品名称', 'en': 'Artifact name'
-    }, 'btn_add':                           {'zh': '添加', 'en': 'Add'
-    }, 'btn_delete':                        {'zh': '删除', 'en': 'Delete'
-    }, 'tree_blueprint':                    {'zh': '蓝图名称', 'en': 'Blueprint name'
-    }, 'btn_modify':                        {'zh': '修改', 'en': 'Modify'
-    }, 'label_lvl':                         {'zh': '当前文件：', 'en': 'current level: '
-    }, 'label_chapter':                     {'zh': '章节：', 'en': 'Chapter: '
-    }, 'label_day':                         {'zh': '关卡：', 'en': 'Day: '
-    }, 'label_flag':                        {'zh': '旗数：', 'en': 'Flag: '
-    }, 'label_wave':                        {'zh': '波数：', 'en': 'Wave: '
-    }, 'label_energy':                      {'zh': '当前机械能：', 'en': 'Energy: '
-    }, 'label_maxEnergy':                   {'zh': '机械能上限：', 'en': 'maxEnergy: '
-    }, 'label_starshard':                   {'zh': '星之碎片数：', 'en': 'Starshard: '
-    }, 'label_maxStarshard':                {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
-    }, 'label_isConveyorMode':              {'zh': '启用传送带', 'en': 'ConveyorMode'
-    }, 'label_conveyorslot':                {'zh': '传送带槽数：', 'en': 'ConveyorSlot: '
-    }, 'label_energyActive':                {'zh': '显示机械能', 'en': 'energyVisiable'
-    }, 'label_blueprintsActive':            {'zh': '显示蓝图', 'en': 'blueprintVisiable'
-    }, 'label_pickaxeActive':               {'zh': '启用镐子', 'en': 'pickaxeEnable'
-    }, 'label_starshardActive':             {'zh': '启用星之碎片', 'en': 'starshardEnable'
-    }, 'label_triggerActive':               {'zh': '启用驱动', 'en': 'triggerEnable'
-    }, 'label_musicID':                     {'zh': '背景音乐：', 'en': 'BGM: '
-    }, 'label_autoCollect':                 {'zh': '自动收集', 'en': 'AutoCollect'
-    }, 'label_rechargeSpeed':               {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
-    }, 'label_ignoreHugeWaveEvent':         {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
-    }, 'label_difficulty':                  {'zh': '难度：', 'en': 'difficulty: '
-    }, 'btn_help':                          {'zh': '使用说明', 'en': 'Instructions'
-    }, 'True':                              {'zh': '是', 'en': 'True'
-    }, 'False':                             {'zh': '否', 'en': 'False'
-    }, 'status_save':                       {'zh': '已保存到：', 'en': 'Save to: '
-    }, 'btn_open_explorer':                 {'zh': '打开存档文件夹', 'en': 'View in Explorer'
-    }, 'info_missing':                      {'zh': '参数错误', "en":'Parameter error'
-    }, 'info_missing_param':                {'zh': '读取参数失败：', 'en':'Fail to read param: '
-    }, 'page_Numeric_Editor':               {'zh': '基础', 'en':'Basic'
-    }, 'page_Artifact_Blueprint_Editor':    {'zh': '蓝图/制品', 'en':'Artifact/Blueprint'
-    }, 'page_Grids_Editor':                 {'zh': '网格', 'en':'Grids'
-    }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
-    }, 'label_start_grid':                  {'zh': '请先选择存档', 'en':'Please choose a level file to start'
     }, 'check_enemyPool':                   {'zh': '启用无尽出怪', 'en':'Enable Endless Spawn'
     }, 'help_1':                            {'zh': '声明：使用该软件造成的文件损坏，作者本人一概不负责\n', 'en':'Disclaimer: The author is not responsible for any file damage caused by the use of this software.\n'
     }, 'help_2':                            {'zh': '改修改器不支持直接修改游戏进程，仅支持修改退出关卡时保存的关卡存档文件\n', 'en':'The editor does not support directly modifying the game process, but only supports modifying the level archive file saved when exiting the level..\n'
@@ -86,6 +52,42 @@ _text_data = {'title':                      {'zh': 'MVZ2存档修改器 v2.0-pre
     }, 'help_link1':                        {'zh': '游戏作者主页', 'en':'Game author homepage'
     }, 'help_link2':                        {'zh': '修改器作者主页', 'en':'Modifier Author Home Page'
     }, 'help_link3':                        {'zh': '修改器源码', 'en':'Modifier Github Page'
+    }, 'info_missing':                      {'zh': '参数错误', "en":'Parameter error'
+    }, 'info_missing_param':                {'zh': '读取参数失败：', 'en':'Fail to read param: '
+    }, 'label_autoCollect':                 {'zh': '自动收集', 'en': 'AutoCollect'
+    }, 'label_blueprintsActive':            {'zh': '显示蓝图', 'en': 'blueprintVisiable'
+    }, 'label_chapter':                     {'zh': '章节：', 'en': 'Chapter: '
+    }, 'label_conveyorslot':                {'zh': '传送带槽数：', 'en': 'ConveyorSlot: '
+    }, 'label_day':                         {'zh': '关卡：', 'en': 'Day: '
+    }, 'label_difficulty':                  {'zh': '难度：', 'en': 'difficulty: '
+    }, 'label_energy':                      {'zh': '当前机械能：', 'en': 'Energy: '
+    }, 'label_energyActive':                {'zh': '显示机械能', 'en': 'energyVisiable'
+    }, 'label_flag':                        {'zh': '旗数：', 'en': 'Flag: '
+    }, 'label_ignoreHugeWaveEvent':         {'zh': '忽略大波事件', 'en': 'Ignore Flag Events'
+    }, 'label_isConveyorMode':              {'zh': '启用传送带', 'en': 'ConveyorMode'
+    }, 'label_lvl':                         {'zh': '当前文件：', 'en': 'current level: '
+    }, 'label_lvl_null':                    {'zh': '当前存档：未选择', 'en': 'current level: empty'
+    }, 'label_maxEnergy':                   {'zh': '机械能上限：', 'en': 'maxEnergy: '
+    }, 'label_maxStarshard':                {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
+    }, 'label_musicID':                     {'zh': '背景音乐：', 'en': 'BGM: '
+    }, 'label_pickaxeActive':               {'zh': '启用镐子', 'en': 'pickaxeEnable'
+    }, 'label_rechargeSpeed':               {'zh': '蓝图无冷却', 'en': 'Cancel Blueprint Cooldown'
+    }, 'label_starshard':                   {'zh': '星之碎片数：', 'en': 'Starshard: '
+    }, 'label_starshardActive':             {'zh': '启用星之碎片', 'en': 'starshardEnable'
+    }, 'label_start_grid':                  {'zh': '请先选择存档', 'en':'Please choose a level file to start'
+    }, 'label_triggerActive':               {'zh': '启用驱动', 'en': 'triggerEnable'
+    }, 'label_user':                        {'zh': '当前用户：', 'en': 'current user: '
+    }, 'label_wave':                        {'zh': '波数：', 'en': 'Wave: '
+    }, 'page_Artifact_Blueprint_Editor':    {'zh': '蓝图/制品', 'en':'Artifact/Blueprint'
+    }, 'page_Artifact_Editor':              {'zh': '制品', 'en':'Artifact'
+    }, 'page_Blueprint_Editor':             {'zh': '蓝图', 'en':'Blueprint'
+    }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
+    }, 'page_Grids_Editor':                 {'zh': '网格', 'en':'Grids'
+    }, 'page_Numeric_Editor':               {'zh': '基础', 'en':'Basic'
+    }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
+    }, 'status_save':                       {'zh': '已保存到：', 'en': 'Save to: '
+    }, 'tree_artifact':                     {'zh': '制品名称', 'en': 'Artifact name'
+    }, 'tree_blueprint':                    {'zh': '蓝图名称', 'en': 'Blueprint name'
     }
 }
 
@@ -145,7 +147,7 @@ Choose your language/请选择语言
         self.selector.destroy()
         self.root.destroy()
 
-def get_language():
+def _get_language():
     key_path = r"Software\\Cuerzor\\MinecraftVSZombies2"
 
     key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,key_path,0,winreg.KEY_READ)
@@ -162,23 +164,23 @@ def get_language():
     winreg.CloseKey(key)
 
     if value_data == b'en-US\x00':
-        set_language("en")
+        _set_language("en")
     elif value_data == b'zh-Hans\x00':
-        set_language("zh")
+        _set_language("zh")
     else:
-        choose_language()
+        _choose_language()
 
-def set_language(lang):
+def _set_language(lang):
     global _language
     if lang == "zh":
         _language = "zh"
     if lang == "en":
         _language = "en"
 
-def choose_language():
-    LanguageSelector(on_select=set_language)
+def _choose_language():
+    LanguageSelector(on_select=_set_language)
 
-get_language()
+_get_language()
 # endregion
 
 class BilingualDataset:
@@ -220,7 +222,7 @@ class BilingualDataset:
         if _language=="en":
             return self.en_names
 
-class TextManager:
+class _TextManager:
     """改进的文本管理器，保持与BilingualDataset兼容的接口"""
     def __init__(self, data):
         # 构建双向索引
@@ -255,6 +257,86 @@ class TextManager:
     def name_list(self):
         return [self._data[k][_language] for k in self.ids]
     
+import sys, os
+from PIL import Image, ImageTk
+class _ImageAssets:
+    def __init__(self):
+        self._assets = {
+            "artifacts": {},
+            "blueprints": {},
+            "grids": {},
+            "common": {}
+        }
+        self._missing = None
+
+    def _resource_path(self, relative_path):
+        """ 处理打包资源路径 """
+        if hasattr(sys, "_MEIPASS"):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+
+    def _load_category(self, category_dir, category_name):
+        """ 加载特定类别的资源 """
+        full_path = self._resource_path(category_dir)
+        if not os.path.exists(full_path):
+            return
+
+        for filename in os.listdir(full_path):
+            if filename.startswith(".") or not filename.endswith(".png"):
+                continue
+            
+            name = os.path.splitext(filename)[0]
+            try:
+                img = Image.open(os.path.join(full_path, filename))
+                self._assets[category_name][name] = ImageTk.PhotoImage(img)
+            except Exception as e:
+                print(f"Failed to load {category_name}/{filename}: {str(e)}")
+                self._assets[category_name][name] = self._get_missing_image()
+
+    def _get_missing_image(self):
+        """ 获取备用图片 """
+        if not self._missing:
+            missing_path = self._resource_path("assets/missing.png")
+            if os.path.exists(missing_path):
+                self._missing = ImageTk.PhotoImage(Image.open(missing_path))
+        return self._missing
+
+    def _load_resources(self):
+        """ 加载所有资源 """
+        # 加载三大主要类别
+        self._load_category(os.path.join("assets", "artifacts"), "artifacts")
+        self._load_category(os.path.join("assets", "blueprints"), "blueprints")
+        self._load_category(os.path.join("assets", "grids"), "grids")
+
+        # 加载公共资源
+        common_path = self._resource_path("assets")
+        for filename in os.listdir(common_path):
+            if filename == "missing.png":
+                continue
+            if filename.endswith(".png"):
+                name = os.path.splitext(filename)[0]
+                try:
+                    img = Image.open(os.path.join(common_path, filename))
+                    self._assets["common"][name] = ImageTk.PhotoImage(img)
+                except Exception as e:
+                    print(f"Failed to load common/{filename}: {str(e)}")
+
+    # ----------------- 公有接口 -----------------
+    def get_artifact(self, name):
+        return self._assets["artifacts"].get(name, self._get_missing_image())
+
+    def get_blueprint(self, name):
+        return self._assets["blueprints"].get(name, self._get_missing_image())
+
+    def get_grid(self, name):
+        return self._assets["grids"].get(name, self._get_missing_image())
+
+    def get_common(self, name):
+        return self._assets["common"].get(name, self._get_missing_image())
+        
+assets = _ImageAssets()
 maps = BilingualDataset(_maps_id, _maps_name_zh, _maps_name_en)
 levels = BilingualDataset(_level_id, _level_name_zh, _level_name_en)
 artifacts = BilingualDataset(_artifact_id, _artifact_name_zh, _artifact_name_en)
@@ -262,7 +344,7 @@ blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name
 musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
 difficultys = BilingualDataset(_difficulty_id, _difficulty_name_zh, _difficulty_name_en)
 grids = BilingualDataset(_grid_id, _gird_name_zh, _gird_name_en)
-texts = TextManager(_text_data)
+texts = _TextManager(_text_data)
 
 bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])
 

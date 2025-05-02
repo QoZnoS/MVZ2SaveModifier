@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 from tkinter import messagebox, ttk
 import NameData
 
@@ -452,7 +453,6 @@ class DataHandler:
                 misslabel = misslabel + label + "\n"
             messagebox.showinfo(get_text('info_missing'), misslabel)
 
-# 2.0版本完成分页重构
 # 3.0版本实现可视化编辑
 
 # 各个分页
@@ -557,6 +557,34 @@ class Artifact_Blueprint_Editor:
             if data_blueprint[i]:
                 self.blueprint_tree.insert("", "end", values=(i, NameData.blueprints.get_name(data_blueprint[i])))
     # endregion
+
+class Artifact_Editor:
+    def __init__(self, master, data_handler:DataHandler):
+        self.master = master
+        self.data_handler = data_handler
+        self.frame = tk.Frame(master)
+        self.frame.pack()
+        self._setup_ui()
+
+    def _setup_ui(self):
+        pass
+
+    def refresh(self):
+        pass
+
+class Blueprint_Editor:
+    def __init__(self, master, data_handler:DataHandler):
+        self.master = master
+        self.data_handler = data_handler
+        self.frame = tk.Frame(master)
+        self.frame.pack()
+        self._setup_ui()
+
+    def _setup_ui(self):
+        pass
+
+    def refresh(self):
+        pass
 
 class Numeric_Editor:
     def __init__(self, master, data_handler:DataHandler):
@@ -838,9 +866,9 @@ class Grids_Editor:
 
         for grid in self.data_handler.get_grids():
             enum = grid['lane']*9 + grid['column']
-            text = NameData.grids.get_name(grid['definitionID'])
             var = tk.BooleanVar()
-            btn = tk.Button(grids, text=text, width=5, height=2, bg="white", command=lambda enum=enum: self.toggle_grid(enum))
+            img = NameData.assets.get_grid(NameData.grids.get_name(grid['definitionID'], "en"))
+            btn = tk.Button(grids, width=70, height=70, bg="white", command=lambda enum=enum: self.toggle_grid(enum), image=img)
             btn.grid(row=grid['lane'], column=grid['column'])
             self.grids.append((var, btn))
 
@@ -851,7 +879,6 @@ class Grids_Editor:
         var.set(not var.get())
         color = "lightgreen" if var.get() == 1 else "white"
         btn.config(bg=color)
-        # btn.config(image=image)
 
     def change_grid(self):
         if not self.grid_id_box.get():
@@ -861,7 +888,9 @@ class Grids_Editor:
             var = self.grids[i][0]
             if var.get():
                 self.data_handler.set_grid_definitionID_by_enum(i, definitionID)
-                self.grids[i][1].config(text=NameData.grids.get_name(definitionID))
+                img = NameData.assets.get_grid(NameData.grids.get_name(definitionID, "en"))
+                self.grids[i][1].config(image=img)
+
     # endregion
 
     def refresh(self):
