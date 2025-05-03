@@ -324,24 +324,6 @@ class DataHandler:
     def get_classic_blueprint_length(self):
         return len(self.current_data['parts'][0]['classicBlueprints'])
 
-    def set_seedID_by_enum(self, enum, seedID):
-        self.current_data['level']['seedPacks'][enum]['seedID'] = seedID
-
-    def new_classic_blueprint(self):
-        classicBlueprint = {"_t":"SerializableClassicBlueprintController",
-                            "model": {"_t": "SerializableUIModelData","rng": {},
-                                "graphicGroup": {"_t": "SerializableModelImageGroup","animators": []},
-                                "propertyDict": {},"childModels":[]}}
-        return classicBlueprint
-
-    def new_seedPack_blueprint(self, seedID):
-        blueprint = {"seedID": seedID,
-                    "currentBuffID": ["NumberLong", 1],
-                    "buffs": {"buffs": []},
-                    "properties": {},
-                    "auras": [{"updateTimer": {},"buffs": []}]}
-        return blueprint
-    # 兼容函数
     def get_seedID_list(self):
         seedID_list = []
         for seed in self.get_seedPacks():
@@ -350,7 +332,60 @@ class DataHandler:
             except:
                 seedID_list.append(None)
         return seedID_list
-    # 兼容函数
+    
+    def set_seedID_by_enum(self, enum, seedID):
+        """修改 seedID 若为 null 则替换为新 seedPack 同时修改 classicBlueprint"""
+        try:
+            self.current_data['level']['seedPacks'][enum]['seedID'] = seedID
+            self.fix_seed_auras(enum)
+        except:
+            if (self.current_data['parts'][0]['classicBlueprints'][enum]==None):
+                self.current_data['parts'][0]['classicBlueprints'][enum] = self._new_classic_blueprint()
+            self.current_data['level']['seedPacks'][enum] = self._new_seedPack_blueprint(seedID)
+
+    def add_seedPack(self):
+        """同时添加 seedPack classicBlueprint"""
+        self.current_data['level']['seedPacks'].append(None)
+        self.current_data['parts'][0]['classicBlueprints'].append(None)
+
+    def del_seedPack(self, enum):
+        """同时移除 seedPack classicBlueprint"""
+        del self.current_data['level']['seedPacks'][enum]
+        del self.current_data['parts'][0]['classicBlueprints'][enum]
+
+    def set_seedPack_cost(self, enum, cost):
+        self.current_data['level']['seedPacks'][enum]["properties"]["cost"] = float(cost)
+
+    def set_seedPack_rechargeSpeed(self, enum, speed):
+        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = float(speed)
+
+    def get_seedPack_rechargeSpeed(self, enum):
+        return self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]
+
+    def set_seedPack_rechargeId(self, enum):
+        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"] = "mvz2:long"
+
+    def get_seedPack_buff_length(self, enum):
+        return len(self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"])
+
+    def remove_seedPack_buff(self, enum):
+        self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"].clear()
+
+    def _new_classic_blueprint(self):
+        classicBlueprint = {"_t":"SerializableClassicBlueprintController",
+                            "model": {"_t": "SerializableUIModelData","rng": {},
+                                "graphicGroup": {"_t": "SerializableModelImageGroup","animators": []},
+                                "propertyDict": {},"childModels":[]}}
+        return classicBlueprint
+
+    def _new_seedPack_blueprint(self, seedID):
+        blueprint = {"seedID": seedID,
+                    "currentBuffID": ["NumberLong", 1],
+                    "buffs": {"buffs": []},
+                    "properties": {},
+                    "auras": [{"updateTimer": {},"buffs": []}]}
+        return blueprint
+
     def fix_seed_auras(self, enum):
         """处理紫卡"""
         if len(self.current_data['level']['seedPacks'][enum]['auras'])==0:
@@ -613,8 +648,8 @@ class Blueprint_Editor:
         self.btn_frame = tk.Frame(self.ui)
         self.btn_frame.pack()
 
-        change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24)
-        change_blueprint_btn.pack()
+        self.change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24)
+        self.change_blueprint_btn.pack(side=tk.LEFT)
 
     def add_blueprint_btn(self, seedID=None):
         var = tk.BooleanVar()
@@ -629,13 +664,20 @@ class Blueprint_Editor:
     # region 响应回调
     def toggle_blueprint(self, enum):
         _, enum_btn = self.blueprint_list[enum]
+        i=0
         for var,btn in self.blueprint_list:
             if (btn == enum_btn):
                 var.set(not var.get())
-            else:
-                var.set(False)
+            if (var.get()):
+                i+=1
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
+        if (i>1):
+            self.refresh_component(False)
+        elif (i==1):
+            self.refresh_component(True)
+        elif (i==0):
+            self.change_blueprint_btn.config(state=tk.DISABLED)
 
     def add_classic_blueprint(self):
         pass
@@ -644,7 +686,12 @@ class Blueprint_Editor:
         Window.BlueprintSelector(self.ui, self.change_blueprint_id)
 
     def change_blueprint_id(self, seedID):
-        print(seedID)
+        enum = 0
+        for var, btn in self.blueprint_list:
+            if (var.get()):
+                btn.config(image=NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID, "zh")))
+                self.data_handler.set_seedID_by_enum(enum, seedID)
+            enum += 1
     # endregion
     # region 刷新
     def refresh(self):
@@ -654,6 +701,9 @@ class Blueprint_Editor:
         self._setup_blueprint()
         self.ui.pack(side=tk.BOTTOM, expand=True)
         self.start_label.destroy()
+
+    def refresh_component(self, single:bool):
+        self.change_blueprint_btn.config(state=tk.NORMAL)
     # endregion
 
 class Numeric_Editor:
