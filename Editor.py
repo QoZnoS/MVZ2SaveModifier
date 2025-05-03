@@ -370,6 +370,7 @@ class DataHandler:
 
     def remove_seedPack_buff(self, enum):
         self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"].clear()
+        self.current_data['level']['seedPacks'][enum]["currentBuffID"][1] = 1
 
     def _new_classic_blueprint(self):
         classicBlueprint = {"_t":"SerializableClassicBlueprintController",
@@ -622,14 +623,6 @@ class Blueprint_Editor:
         
         self.blueprint_list = []
         self.empty_img = tk.PhotoImage(width=86, height=90)  # 透明占位图
-        self.canvas = None # 蓝图画布
-
-        self._setup_ui()
-        self.start_label = tk.Label(self.frame, text=get_text("label_start_grid"))
-        self.start_label.pack(pady=90)
-
-    # region UI
-    def _setup_blueprint(self):
         self.canvas = tk.Canvas(self.frame)
         self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         self.blueprint_frame = tk.Frame(self.canvas)
@@ -637,21 +630,34 @@ class Blueprint_Editor:
         self.canvas.create_window((0, 0), window=self.blueprint_frame, anchor=tk.NW)
         scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
         scroll_x.pack(side=tk.TOP, fill=tk.X, pady=100)
+
+        self._setup_ui()
+
+    # region UI
+    def _setup_blueprint(self):
         
         length = self.data_handler.get_classic_blueprint_length()
         seed_ID = self.data_handler.get_seedID_list()
         for i in range(length):
-            self.add_blueprint_btn(seed_ID[i])
+            self._blueprint_btn(seed_ID[i])
 
     def _setup_ui(self):
         self.ui = tk.Frame(self.frame)
         self.btn_frame = tk.Frame(self.ui)
-        self.btn_frame.pack()
+        self.btn_frame.pack(fill=tk.BOTH, side=tk.LEFT)
 
         self.change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24)
-        self.change_blueprint_btn.pack(side=tk.LEFT)
+        self.change_blueprint_btn.grid(row=0, column=1, sticky="ew", pady=12)
+        self.add_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_add_blueprint"), command=self.add_blueprint, width=24)
+        self.add_blueprint_btn.grid(row=0, column=3, sticky="ew", pady=12)
+        self.del_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_delete_blueprint"), command=self.del_blueprint, width=24)
+        self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12, padx=64)
+        self.change_cost_input = add_input(self.btn_frame, get_text("label_cost"), 1, 0, self.master.register(self.change_cost))
+        self.change_recharge_time_input = add_input(self.btn_frame, get_text("label_recharge_time"), 1, 1, self.master.register(self.change_recharge_time))
+        self.remove_buff_btn = tk.Button(self.btn_frame, text=get_text("btn_remove_buff"), command=self.remove_buff, width=24)
+        self.remove_buff_btn.grid(row=1, column=5, sticky="ew", pady=12, padx=64)
 
-    def add_blueprint_btn(self, seedID=None):
+    def _blueprint_btn(self, seedID=None):
         var = tk.BooleanVar()
         btn = tk.Button(self.blueprint_frame, bg="white",
                         command=lambda enum=len(self.blueprint_list): self.toggle_blueprint(enum))
@@ -679,7 +685,22 @@ class Blueprint_Editor:
         elif (i==0):
             self.change_blueprint_btn.config(state=tk.DISABLED)
 
-    def add_classic_blueprint(self):
+    def add_blueprint(self):
+        pass
+
+    def del_blueprint(self):
+        pass
+
+    def change_recharge_time(self):
+        pass
+
+    def change_cost(self):
+        pass
+
+    def remove_buff(self):
+        pass
+
+    def remove_buff_help(self):
         pass
 
     def open_blueprint_selector(self):
@@ -695,11 +716,9 @@ class Blueprint_Editor:
     # endregion
     # region 刷新
     def refresh(self):
-        if self.canvas:
-            self.canvas.destroy()
         self.blueprint_list.clear()
         self._setup_blueprint()
-        self.ui.pack(side=tk.BOTTOM, expand=True)
+        self.ui.pack(side=tk.TOP, expand=True)
         self.start_label.destroy()
 
     def refresh_component(self, single:bool):
@@ -1095,6 +1114,10 @@ def add_box(frame, label:str, row, column, value:list, command):
     return box
 
 def add_input(frame, label:str, row, column, validatecommand):
+    """
+    label需使用get_text \n
+    validatecommand写法为 <code>self.master.register(self.command)</code>
+    """
     tk.Label(frame, text=label).grid(row=row, column=2*column, sticky="e", pady=12)
     input = ttk.Entry(frame, state="disable", validate='key',validatecommand=(validatecommand, '%d', '%i', '%P', '%s', '%v', '%V', '%W'),width=16)
     input.grid(row=row, column=2*column+1, sticky="ew", pady=12)
