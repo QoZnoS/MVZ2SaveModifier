@@ -8,7 +8,7 @@ def get_text(id):
     """获取文本"""
     return NameData.texts.get_name(id)
 
-
+_window_size = "600x400"
 # 存档选择窗口
 class SaveFileSelector(tk.Toplevel):
     def __init__(self, parent, save_dir, on_select):
@@ -145,6 +145,135 @@ class UserSelector(tk.Toplevel):
         self.on_select(selected_user)
         self.destroy()
 
+class BlueprintSelector(tk.Toplevel):
+    def __init__(self, parent, on_select):
+        super().__init__(parent)
+        self.parent = parent
+        self.on_select = on_select
+
+        # 窗口设置
+        self.title("Selector Blueprint")
+        self.geometry(_window_size)
+        self.resizable(True, True)
+        self.transient(parent)
+        self.grab_set()
+
+        # 主容器布局
+        main_container = ttk.Frame(self)
+        main_container.pack(fill=tk.BOTH, expand=True)
+
+        # 创建滚动系统
+        self.canvas = tk.Canvas(main_container)
+        self.scrollbar = ttk.Scrollbar(main_container, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = ttk.Frame(self.canvas)
+        
+        # 关键修复：同步Canvas和滚动区域的宽度
+        self.canvas.bind("<Configure>", 
+            lambda e: self.scrollable_frame.config(width=e.width-20))  # 留出滚动条宽度
+
+        # 配置Canvas
+        self.scrollable_frame.bind("<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0,0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        # 布局滚动区域
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # 底部操作按钮（独立于滚动区域）
+        self.btn_frame = ttk.Frame(self)
+        self.btn_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=5, pady=5)
+        self.seed_text = tk.Label(self.btn_frame)
+        self.seed_text.pack(side=tk.LEFT)
+        ttk.Button(self.btn_frame, text="取消/Cancel", command=self.destroy).pack(side=tk.RIGHT, padx=3)
+        ttk.Button(self.btn_frame, text="选择/Choose", command=self.confirm_selection).pack(side=tk.RIGHT, padx=3)
+
+        # 按钮容器
+        self.btn_container = ttk.Frame(self.scrollable_frame)
+        self.btn_container.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+
+        self.btn_list = []
+        self.create_btn_list()
+        
+        self.last_size = (0, 0)
+        self.bind("<Configure>", self.on_window_resize)
+        
+        # 初始布局
+        self.setup_btn()
+
+    def create_btn_list(self):
+        for idx, seedID in enumerate(NameData.blueprints.zh_names):
+            var = tk.BooleanVar()
+            btn = tk.Button(self.btn_container, bg="white", 
+                          command=lambda e=idx: self.toggle_btn(e))
+            img = NameData.assets.get_blueprint(seedID)
+            btn.config(image=img, width=85, height=85, compound=tk.CENTER)
+            
+            self.btn_list.append((var, btn, seedID, idx))
+
+    def setup_btn(self):
+        # 强制更新布局获取真实宽度
+        self.update_idletasks()
+        container_width = self.winfo_width()
+        
+        # 计算列数（最小1列）
+        btn_size = 85
+        columns = max(1, container_width // (btn_size + 5)) if container_width > 10 else 1
+
+        for _, btn, _, idx in self.btn_list:
+            row, col = divmod(idx, columns)
+            btn.grid(row=row, column=col, sticky="nsew")
+
+        # 配置网格列权重
+        for col in range(columns):
+            self.btn_container.columnconfigure(col, weight=1)
+
+    def on_window_resize(self, event):
+        global _window_size
+        """改进的事件处理："""
+        # 只处理顶层窗口事件
+        if event.widget != self:
+            return
+        
+        # 获取当前实际尺寸
+        new_width = self.winfo_width()
+        new_height = self.winfo_height()
+        
+        # 尺寸变化阈值检测（5像素容差）
+        if (abs(new_width - self.last_size[0])) < 5 :
+            return
+        self.last_size = (new_width, new_height)
+        _window_size = str(new_width) + "x" + str(new_height)
+
+        self.setup_btn()
+
+    def toggle_btn(self, enum):
+        _, enum_btn, _, _ = self.btn_list[enum]
+        for var, btn, seedID, _ in self.btn_list:
+            if btn == enum_btn:
+                if var.get():
+                    self.confirm_selection()
+                    return
+                else:
+                    var.set(True)
+                    self.seed_text.config(text=NameData.blueprints.get_name(NameData.blueprints.get_id(seedID)))
+            else:
+                var.set(False)
+            color = "lightgreen" if var.get() else "white"
+            btn.config(bg=color)
+
+    def confirm_selection(self):
+        # 原有逻辑保持不变
+        selected = None
+        for var, btn, seedID, _ in self.btn_list:
+            if var.get():
+                selected = NameData.blueprints.get_id(seedID)
+        if not selected:
+            return
+        self.on_select(selected)
+        self.destroy()
+
 # 关于
 class HelpWindow:
     def __init__(self, parent):
@@ -158,7 +287,7 @@ class HelpWindow:
         
         # 主容器
         container = ttk.Frame(self.window)
-        container.pack(padx=20, pady=20, fill="both", expand=True)
+        container.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
         
         # 文字信息
         text_content = get_text('help_1') + get_text('help_2') + get_text('help_3') + get_text('help_4') + get_text('help_5') + get_text('help_6')

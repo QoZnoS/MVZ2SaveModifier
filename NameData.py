@@ -36,6 +36,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-6 b
     }, 'btn_help':                          {'zh': '使用说明', 'en': 'Instructions'
     }, 'btn_lvl':                           {'zh': '选择存档', 'en': 'Select level file'
     }, 'btn_modify':                        {'zh': '修改', 'en': 'Modify'
+    }, 'btn_modify_blueprint':              {'zh': '修改蓝图', 'en': 'Modify Blueprint'
     }, 'btn_open_explorer':                 {'zh': '打开存档文件夹', 'en': 'View in Explorer'
     }, 'btn_page':                          {'zh': '切换界面', 'en': 'Another page'
     }, 'btn_save':                          {'zh': '保存文件', 'en': 'Execute the modification'

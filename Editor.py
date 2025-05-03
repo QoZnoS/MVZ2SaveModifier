@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import messagebox, ttk
-import NameData
+import NameData, Window
 
 def get_text(id):
     """获取文本"""
@@ -348,7 +348,7 @@ class DataHandler:
             try:
                 seedID_list.append(seed['seedID'])
             except:
-                break
+                seedID_list.append(None)
         return seedID_list
     # 兼容函数
     def fix_seed_auras(self, enum):
@@ -587,36 +587,46 @@ class Blueprint_Editor:
         
         self.blueprint_list = []
         self.empty_img = tk.PhotoImage(width=86, height=90)  # 透明占位图
+        self.canvas = None # 蓝图画布
+
+        self._setup_ui()
+        self.start_label = tk.Label(self.frame, text=get_text("label_start_grid"))
+        self.start_label.pack(pady=90)
 
     # region UI
-    def setup_blueprint(self):
+    def _setup_blueprint(self):
         self.canvas = tk.Canvas(self.frame)
         self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        blueprint_frame = tk.Frame(self.canvas)
-        blueprint_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
-        self.canvas.create_window((0, 0), window=blueprint_frame, anchor=tk.NW)
+        self.blueprint_frame = tk.Frame(self.canvas)
+        self.blueprint_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0, 0), window=self.blueprint_frame, anchor=tk.NW)
         scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
         scroll_x.pack(side=tk.TOP, fill=tk.X, pady=100)
         
         length = self.data_handler.get_classic_blueprint_length()
-        seed_pack = self.data_handler.get_seedPacks()
+        seed_ID = self.data_handler.get_seedID_list()
         for i in range(length):
-            var = tk.BooleanVar()
-            btn = tk.Button(blueprint_frame, bg="white", command=lambda enum=i: self.toggle_blueprint(enum))
-            try:
-                img = NameData.assets.get_blueprint(NameData.blueprints.get_name(seed_pack[i]["seedID"]))
-                if not img:
-                    img = self.empty_img
-            except:
-                img = self.empty_img
-            btn.config(image=img, width=85, height=90, compound=tk.CENTER)
-            btn.pack(side=tk.LEFT)
-            self.blueprint_list.append((var, btn))
+            self.add_blueprint_btn(seed_ID[i])
 
-    def add_blueprint_btn(self, seedID):
-        pass
+    def _setup_ui(self):
+        self.ui = tk.Frame(self.frame)
+        self.btn_frame = tk.Frame(self.ui)
+        self.btn_frame.pack()
+
+        change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24)
+        change_blueprint_btn.pack()
+
+    def add_blueprint_btn(self, seedID=None):
+        var = tk.BooleanVar()
+        btn = tk.Button(self.blueprint_frame, bg="white",
+                        command=lambda enum=len(self.blueprint_list): self.toggle_blueprint(enum))
+        img = NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID)) if (seedID != None) else self.empty_img
+        btn.config(image=img, width=85, height=90, compound=tk.CENTER)
+        btn.pack(side=tk.LEFT)
+        self.blueprint_list.append((var, btn))
 
     # endreigon
+    # region 响应回调
     def toggle_blueprint(self, enum):
         _, enum_btn = self.blueprint_list[enum]
         for var,btn in self.blueprint_list:
@@ -627,12 +637,25 @@ class Blueprint_Editor:
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
 
+    def add_classic_blueprint(self):
+        pass
+
+    def open_blueprint_selector(self):
+        Window.BlueprintSelector(self.ui, self.change_blueprint_id)
+
+    def change_blueprint_id(self, seedID):
+        print(seedID)
+    # endregion
+    # region 刷新
     def refresh(self):
         if self.canvas:
             self.canvas.destroy()
         self.blueprint_list.clear()
-        self.setup_blueprint()
-        
+        self._setup_blueprint()
+        self.ui.pack(side=tk.BOTTOM, expand=True)
+        self.start_label.destroy()
+    # endregion
+
 class Numeric_Editor:
     def __init__(self, master, data_handler:DataHandler):
         self.master = master
