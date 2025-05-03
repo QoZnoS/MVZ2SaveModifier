@@ -321,8 +321,26 @@ class DataHandler:
         """返回seedPacks原始列表"""
         return list(self.current_data['level']['seedPacks'])
 
+    def get_classic_blueprint_length(self):
+        return len(self.current_data['parts'][0]['classicBlueprints'])
+
     def set_seedID_by_enum(self, enum, seedID):
         self.current_data['level']['seedPacks'][enum]['seedID'] = seedID
+
+    def new_classic_blueprint(self):
+        classicBlueprint = {"_t":"SerializableClassicBlueprintController",
+                            "model": {"_t": "SerializableUIModelData","rng": {},
+                                "graphicGroup": {"_t": "SerializableModelImageGroup","animators": []},
+                                "propertyDict": {},"childModels":[]}}
+        return classicBlueprint
+
+    def new_seedPack_blueprint(self, seedID):
+        blueprint = {"seedID": seedID,
+                    "currentBuffID": ["NumberLong", 1],
+                    "buffs": {"buffs": []},
+                    "properties": {},
+                    "auras": [{"updateTimer": {},"buffs": []}]}
+        return blueprint
     # 兼容函数
     def get_seedID_list(self):
         seedID_list = []
@@ -336,19 +354,7 @@ class DataHandler:
     def fix_seed_auras(self, enum):
         """处理紫卡"""
         if len(self.current_data['level']['seedPacks'][enum]['auras'])==0:
-            self.current_data['level']['seedPacks'][enum]['auras'].append(
-                    {
-                        "updateTimer": {
-                            "maxFrame": 1,
-                            "lastFrame": 1,
-                            "lastFrameFraction": 0,
-                            "frame": 1,
-                            "frameFraction": 0,
-                            "precision": 2048
-                        },
-                        "buffs": []
-                    }
-            )
+            self.current_data['level']['seedPacks'][enum]['auras'].append({"updateTimer": {},"buffs": []})
 
 
     # endregion
@@ -573,19 +579,60 @@ class Artifact_Editor:
         pass
 
 class Blueprint_Editor:
-    def __init__(self, master, data_handler:DataHandler):
+    def __init__(self, master, data_handler: DataHandler):
         self.master = master
         self.data_handler = data_handler
         self.frame = tk.Frame(master)
-        self.frame.pack()
-        self._setup_ui()
+        self.frame.pack(fill=tk.BOTH, expand=True)
+        
+        self.blueprint_list = []
+        self.empty_img = tk.PhotoImage(width=86, height=90)  # 透明占位图
 
-    def _setup_ui(self):
+    # region UI
+    def setup_blueprint(self):
+        self.canvas = tk.Canvas(self.frame)
+        self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        blueprint_frame = tk.Frame(self.canvas)
+        blueprint_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0, 0), window=blueprint_frame, anchor=tk.NW)
+        scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        scroll_x.pack(side=tk.TOP, fill=tk.X, pady=100)
+        
+        length = self.data_handler.get_classic_blueprint_length()
+        seed_pack = self.data_handler.get_seedPacks()
+        for i in range(length):
+            var = tk.BooleanVar()
+            btn = tk.Button(blueprint_frame, bg="white", command=lambda enum=i: self.toggle_blueprint(enum))
+            try:
+                img = NameData.assets.get_blueprint(NameData.blueprints.get_name(seed_pack[i]["seedID"]))
+                if not img:
+                    img = self.empty_img
+            except:
+                img = self.empty_img
+            btn.config(image=img, width=85, height=90, compound=tk.CENTER)
+            btn.pack(side=tk.LEFT)
+            self.blueprint_list.append((var, btn))
+
+    def add_blueprint_btn(self, seedID):
         pass
+
+    # endreigon
+    def toggle_blueprint(self, enum):
+        _, enum_btn = self.blueprint_list[enum]
+        for var,btn in self.blueprint_list:
+            if (btn == enum_btn):
+                var.set(not var.get())
+            else:
+                var.set(False)
+            color = "lightgreen" if var.get() else "white"
+            btn.config(bg=color)
 
     def refresh(self):
-        pass
-
+        if self.canvas:
+            self.canvas.destroy()
+        self.blueprint_list.clear()
+        self.setup_blueprint()
+        
 class Numeric_Editor:
     def __init__(self, master, data_handler:DataHandler):
         self.master = master
