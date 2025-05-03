@@ -28,7 +28,7 @@ _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
 _grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
 
-_text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-6 by QoZnoS', 'en': 'MVZ2SaveModifier v3.-6 by QoZnoS'
+_text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 by QoZnoS', 'en': 'MVZ2SaveModifier v3.-5 by QoZnoS'
     }, 'False':                             {'zh': '否', 'en': 'False'
     }, 'True':                              {'zh': '是', 'en': 'True'
     }, 'btn_add':                           {'zh': '添加', 'en': 'Add'
@@ -43,7 +43,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-6 b
     }, 'btn_switch':                        {'zh': '切换', 'en': 'switch'
     }, 'btn_unzip':                         {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
     }, 'btn_zip':                           {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
-    }, 'check_enemyPool':                   {'zh': '启用无尽出怪', 'en':'Enable Endless Spawn'
+    }, 'check_enemyPool':                   {'zh': '启用固定出怪', 'en':'Enable Given Spawn'
     }, 'help_1':                            {'zh': '声明：使用该软件造成的文件损坏，作者本人一概不负责\n', 'en':'Disclaimer: The author is not responsible for any file damage caused by the use of this software.\n'
     }, 'help_2':                            {'zh': '改修改器不支持直接修改游戏进程，仅支持修改退出关卡时保存的关卡存档文件\n', 'en':'The editor does not support directly modifying the game process, but only supports modifying the level archive file saved when exiting the level..\n'
     }, 'help_3':                            {'zh': '这意味着你需要进入关卡，并且中途退出，才能在选择存档界面看到你的存档\n', 'en':'This means you need to enter the level and exit midway to see your save file on the save file selection interface.\n'
@@ -82,7 +82,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-6 b
     }, 'page_Artifact_Blueprint_Editor':    {'zh': '蓝图/制品', 'en':'Artifact/Blueprint'
     }, 'page_Artifact_Editor':              {'zh': '制品', 'en':'Artifact'
     }, 'page_Blueprint_Editor':             {'zh': '蓝图', 'en':'Blueprint'
-    }, 'page_EnemyPool_Editor':             {'zh': '无尽出怪', 'en':'Endless Spawn'
+    }, 'page_EnemyPool_Editor':             {'zh': '出怪', 'en':'Spawn'
     }, 'page_Grids_Editor':                 {'zh': '网格', 'en':'Grids'
     }, 'page_Numeric_Editor':               {'zh': '基础', 'en':'Basic'
     }, 'status_ready':                      {'zh': '就绪', 'en': 'Ready'
@@ -350,3 +350,13 @@ texts = _TextManager(_text_data)
 bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])
 
 spawns = ['mvz2:zombie', 'mvz2:leather_capped_zombie', 'mvz2:iron_helmetted_zombie', 'mvz2:flag_zombie', 'mvz2:skeleton', 'mvz2:ghost', 'mvz2:mummy', 'mvz2:necromancer', 'mvz2:spider', 'mvz2:cave_spider', 'mvz2:ghast', 'mvz2:mother_terror', 'mvz2:mesmerizer', 'mvz2:berserker', 'mvz2:dullahan', 'mvz2:hell_chariot', 'mvz2:mutant_zombie', 'mvz2:mega_mutant_zombie']
+
+buff_Entities = []
+
+buff_Contraption = []
+
+buff_Enemy = []
+
+buff_Level = []
+
+buff_Blueprint = []
