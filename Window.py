@@ -181,6 +181,9 @@ class BlueprintSelector(tk.Toplevel):
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
+        self.canvas.bind("<MouseWheel>", self.on_mousewheel)
+        self.scrollable_frame.bind("<Enter>", self.bind_mousewheel)
+        self.scrollable_frame.bind("<Leave>", self.unbind_mousewheel)
         # 底部操作按钮（独立于滚动区域）
         self.btn_frame = ttk.Frame(self)
         self.btn_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=5, pady=5)
@@ -201,6 +204,20 @@ class BlueprintSelector(tk.Toplevel):
         
         # 初始布局
         self.setup_btn()
+
+    def bind_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
+
+    def unbind_mousewheel(self, event):
+        self.canvas.unbind_all("<MouseWheel>")
+
+    def on_mousewheel(self, event):
+        """处理滚轮事件"""
+        # Windows/MacOS
+        if event.delta > 0:
+            self.canvas.yview_scroll(-3, "units")
+        elif event.delta < 0:
+            self.canvas.yview_scroll(3, "units")
 
     def create_btn_list(self):
         for idx, seedID in enumerate(NameData.blueprints.zh_names):
