@@ -356,14 +356,32 @@ class DataHandler:
     def set_seedPack_cost(self, enum, cost):
         self.current_data['level']['seedPacks'][enum]["properties"]["cost"] = float(cost)
 
+    def get_seedPack_cost(self, enum):
+        try:
+            return self.current_data['level']['seedPacks'][enum]["properties"]["cost"]
+        except:
+            return None
+
+    def remove_seedPack_cost(self, enum):
+        del self.current_data['level']['seedPacks'][enum]["properties"]["cost"]
+
     def set_seedPack_rechargeSpeed(self, enum, speed):
-        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = float(speed)
+        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = {"_t": "System.Single","_v": float(speed)}
 
     def get_seedPack_rechargeSpeed(self, enum):
-        return self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]
+        try:
+            return self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]['_v']
+        except:
+            return None
+
+    def remove_seedPack_rechargeSpeed(self, enum):
+        del self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]
 
     def set_seedPack_rechargeId(self, enum):
-        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"] = "mvz2:long"
+        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"] = {"_t": "PVZEngine.NamespaceID","_v": "mvz2:long"}
+
+    def remove_seedPack_rechargeId(self, enum):
+        del self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"]
 
     def get_seedPack_buff_length(self, enum):
         return len(self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"])
@@ -642,6 +660,8 @@ class Blueprint_Editor:
         self.btn_frame = tk.Frame(self.ui)
         self.btn_frame.pack(fill=tk.BOTH, side=tk.TOP)
 
+        self.vars = {}
+        self.toggled = 0
         self.change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24, state=tk.DISABLED)
         self.change_blueprint_btn.grid(row=0, column=1, sticky="ew", pady=12)
         self.add_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_add_blueprint"), command=self.add_blueprint, width=24, state=tk.DISABLED)
@@ -682,31 +702,61 @@ class Blueprint_Editor:
     def toggle_blueprint(self, enum):
         _, enum_btn = self.blueprint_btn_list[enum]
         i=0
-        for var,btn in self.blueprint_btn_list:
+        self.toggled=0
+        for k in range(len(self.blueprint_btn_list)):
+            var, btn=self.blueprint_btn_list[k]
             if (btn == enum_btn):
                 var.set(not var.get())
             if (var.get()):
+                self.toggled=k
                 i+=1
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
         if (i>1):
             self.refresh_component(False)
         elif (i==1):
-            self.refresh_component(True)
+            self.refresh_component(True, self.toggled)
         elif (i==0):
             self.change_blueprint_btn.config(state=tk.DISABLED)
+            self.change_cost_input.config(state=tk.DISABLED)
+            self.change_recharge_time_input.config(state=tk.DISABLED)
+            self.del_blueprint_btn.config(state=tk.DISABLED)
+            self.remove_buff_btn.config(state=tk.DISABLED)
 
     def add_blueprint(self):
-        print(self.blueprint_btn_list)
+        self.data_handler.add_seedPack()
+        self.add_btn_blueprint()
 
     def del_blueprint(self):
-        pass
+        for enum in reversed(range(len(self.blueprint_btn_list))):
+            if (self.blueprint_btn_list[enum][0].get()):
+                self.data_handler.del_seedPack(enum)
+                self.del_btn_blueprint(enum)
+        for enum in range(len(self.blueprint_btn_list)):
+            var, btn = self.blueprint_btn_list[enum]
+            btn.config(command=lambda enum=enum:self.toggle_blueprint(enum))
 
-    def change_recharge_time(self):
-        pass
+    def change_recharge_time(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        if value=="":
+            self.data_handler.remove_seedPack_rechargeId(self.toggled)
+            self.data_handler.remove_seedPack_rechargeSpeed(self.toggled)
+            return True
+        try:
+            self.data_handler.set_seedPack_rechargeId(self.toggled)
+            self.data_handler.set_seedPack_rechargeSpeed(self.toggled, float(value))
+            return True
+        except ValueError:
+            return False
 
-    def change_cost(self):
-        pass
+    def change_cost(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        if value=="":
+            self.data_handler.remove_seedPack_cost(self.toggled)
+            return True
+        try:
+            self.data_handler.set_seedPack_cost(self.toggled, float(value))
+            return True
+        except ValueError:
+            return False
 
     def remove_buff(self):
         pass
@@ -730,10 +780,35 @@ class Blueprint_Editor:
     # endregion
     # region 刷新
     def refresh(self):
+        self.add_blueprint_btn.config(state=tk.NORMAL)
         self._setup_blueprint()
 
-    def refresh_component(self, single:bool):
+    def refresh_component(self, single:bool, enum:int = 0):
         self.change_blueprint_btn.config(state=tk.NORMAL)
+        self.del_blueprint_btn.config(state=tk.NORMAL)
+        self.remove_buff_btn.config(state=tk.NORMAL)
+        if single:
+            speed=self.data_handler.get_seedPack_rechargeSpeed(enum)
+            self.refresh_input(self.change_recharge_time_input, speed)
+            cost=self.data_handler.get_seedPack_cost(enum)
+            self.refresh_input(self.change_cost_input, cost)
+        else:
+            self.refresh_input(self.change_cost_input)
+            self.change_cost_input.config(state=tk.DISABLED)
+            self.refresh_input(self.change_recharge_time_input)
+            self.change_recharge_time_input.config(state=tk.DISABLED)
+
+    def refresh_input(self, input:ttk.Entry, get=None):
+        if input not in self.vars:
+            var = tk.StringVar()
+            input.configure(textvariable=var)
+            self.vars[input] = var
+        if (get != None):
+            self.vars[input].set(str(get))
+        else:
+            self.vars[input].set("")
+        input.config(state="normal")
+
     # endregion
 
 class Numeric_Editor:
@@ -1127,7 +1202,8 @@ def add_box(frame, label:str, row, column, value:list, command):
 def add_input(frame, label:str, row, column, validatecommand):
     """
     label需使用get_text \n
-    validatecommand写法为 <code>self.master.register(self.command)</code>
+    validatecommand写法为 <code>self.master.register(self.command)</code> \n
+    回调函数参数 <code>(self, action, index, value, prior_value, text, validation_type, trigger_type)</code>
     """
     tk.Label(frame, text=label).grid(row=row, column=2*column, sticky="e", pady=12)
     input = ttk.Entry(frame, state="disable", validate='key',validatecommand=(validatecommand, '%d', '%i', '%P', '%s', '%v', '%V', '%W'),width=16)
