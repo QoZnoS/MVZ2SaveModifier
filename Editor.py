@@ -621,57 +621,68 @@ class Blueprint_Editor:
         self.frame = tk.Frame(master)
         self.frame.pack(fill=tk.BOTH, expand=True)
         
-        self.blueprint_list = []
+        self.blueprint_btn_list = []
         self.empty_img = tk.PhotoImage(width=86, height=90)  # 透明占位图
-        self.canvas = tk.Canvas(self.frame)
-        self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        self.blueprint_frame = tk.Frame(self.canvas)
-        self.blueprint_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
-        self.canvas.create_window((0, 0), window=self.blueprint_frame, anchor=tk.NW)
-        scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
-        scroll_x.pack(side=tk.TOP, fill=tk.X, pady=100)
 
         self._setup_ui()
 
     # region UI
+    def _setup_ui(self):
+        self.canvas = tk.Canvas(self.frame, height=110)
+        self.canvas.pack(side=tk.TOP, fill=tk.X, expand=False)
+        self.canvas.pack_propagate(False)
+        self.blueprint_frame = tk.Frame(self.canvas)
+        self.blueprint_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.canvas.create_window((0, 0), window=self.blueprint_frame, anchor=tk.NW)
+        scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.ui = tk.Frame(self.frame)
+        self.ui.pack(side=tk.TOP)
+        self.btn_frame = tk.Frame(self.ui)
+        self.btn_frame.pack(fill=tk.BOTH, side=tk.TOP)
+
+        self.change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24, state=tk.DISABLED)
+        self.change_blueprint_btn.grid(row=0, column=1, sticky="ew", pady=12)
+        self.add_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_add_blueprint"), command=self.add_blueprint, width=24, state=tk.DISABLED)
+        self.add_blueprint_btn.grid(row=0, column=3, sticky="ew", pady=12)
+        self.del_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_delete_blueprint"), command=self.del_blueprint, width=24, state=tk.DISABLED)
+        self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12, padx=(64,0))
+        self.change_cost_input = add_input(self.btn_frame, get_text("label_cost"), 1, 0, self.master.register(self.change_cost))
+        self.change_recharge_time_input = add_input(self.btn_frame, get_text("label_recharge_time"), 1, 1, self.master.register(self.change_recharge_time))
+        self.remove_buff_btn = tk.Button(self.btn_frame, text=get_text("btn_remove_buff"), command=self.remove_buff, width=24, state=tk.DISABLED)
+        self.remove_buff_btn.grid(row=1, column=5, sticky="ew", pady=12, padx=(64,0))
+        self.help_btn = tk.Button(self.btn_frame, text="?", command=self.open_help_window)
+        self.help_btn.grid(row=1, column=6, sticky="ew")
+
     def _setup_blueprint(self):
-        
+        while(len(self.blueprint_btn_list)>0):
+            self.del_btn_blueprint(0)
+
         length = self.data_handler.get_classic_blueprint_length()
         seed_ID = self.data_handler.get_seedID_list()
         for i in range(length):
-            self._blueprint_btn(seed_ID[i])
+            self.add_btn_blueprint(seed_ID[i])
 
-    def _setup_ui(self):
-        self.ui = tk.Frame(self.frame)
-        self.btn_frame = tk.Frame(self.ui)
-        self.btn_frame.pack(fill=tk.BOTH, side=tk.LEFT)
-
-        self.change_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_modify_blueprint"), command=self.open_blueprint_selector, width=24)
-        self.change_blueprint_btn.grid(row=0, column=1, sticky="ew", pady=12)
-        self.add_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_add_blueprint"), command=self.add_blueprint, width=24)
-        self.add_blueprint_btn.grid(row=0, column=3, sticky="ew", pady=12)
-        self.del_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_delete_blueprint"), command=self.del_blueprint, width=24)
-        self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12, padx=64)
-        self.change_cost_input = add_input(self.btn_frame, get_text("label_cost"), 1, 0, self.master.register(self.change_cost))
-        self.change_recharge_time_input = add_input(self.btn_frame, get_text("label_recharge_time"), 1, 1, self.master.register(self.change_recharge_time))
-        self.remove_buff_btn = tk.Button(self.btn_frame, text=get_text("btn_remove_buff"), command=self.remove_buff, width=24)
-        self.remove_buff_btn.grid(row=1, column=5, sticky="ew", pady=12, padx=64)
-
-    def _blueprint_btn(self, seedID=None):
+    def add_btn_blueprint(self, seedID=None):
         var = tk.BooleanVar()
         btn = tk.Button(self.blueprint_frame, bg="white",
-                        command=lambda enum=len(self.blueprint_list): self.toggle_blueprint(enum))
+                        command=lambda enum=len(self.blueprint_btn_list): self.toggle_blueprint(enum))
         img = NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID)) if (seedID != None) else self.empty_img
         btn.config(image=img, width=85, height=90, compound=tk.CENTER)
         btn.pack(side=tk.LEFT)
-        self.blueprint_list.append((var, btn))
+        self.blueprint_btn_list.append((var, btn))
+
+    def del_btn_blueprint(self, enum):
+        self.blueprint_btn_list[enum][1].destroy()
+        del self.blueprint_btn_list[enum]
 
     # endreigon
     # region 响应回调
     def toggle_blueprint(self, enum):
-        _, enum_btn = self.blueprint_list[enum]
+        _, enum_btn = self.blueprint_btn_list[enum]
         i=0
-        for var,btn in self.blueprint_list:
+        for var,btn in self.blueprint_btn_list:
             if (btn == enum_btn):
                 var.set(not var.get())
             if (var.get()):
@@ -686,7 +697,7 @@ class Blueprint_Editor:
             self.change_blueprint_btn.config(state=tk.DISABLED)
 
     def add_blueprint(self):
-        pass
+        print(self.blueprint_btn_list)
 
     def del_blueprint(self):
         pass
@@ -708,18 +719,18 @@ class Blueprint_Editor:
 
     def change_blueprint_id(self, seedID):
         enum = 0
-        for var, btn in self.blueprint_list:
+        for var, btn in self.blueprint_btn_list:
             if (var.get()):
                 btn.config(image=NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID, "zh")))
                 self.data_handler.set_seedID_by_enum(enum, seedID)
             enum += 1
+
+    def open_help_window(self):
+        pass
     # endregion
     # region 刷新
     def refresh(self):
-        self.blueprint_list.clear()
         self._setup_blueprint()
-        self.ui.pack(side=tk.TOP, expand=True)
-        self.start_label.destroy()
 
     def refresh_component(self, single:bool):
         self.change_blueprint_btn.config(state=tk.NORMAL)
