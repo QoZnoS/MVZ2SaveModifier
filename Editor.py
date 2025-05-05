@@ -366,11 +366,11 @@ class DataHandler:
         del self.current_data['level']['seedPacks'][enum]["properties"]["cost"]
 
     def set_seedPack_rechargeSpeed(self, enum, speed):
-        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = {"_t": "System.Single","_v": str(float(speed)+0.00000000001)}
+        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = {"_t": "System.Single","_v": str(float(speed)+0.0000000000000001)}
 
     def get_seedPack_rechargeSpeed(self, enum):
         try:
-            return float(self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]["_v"])-0.00000000001
+            return float(self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]["_v"])-0.0000000000000001
         except:
             return None
 
@@ -415,8 +415,6 @@ class DataHandler:
         """处理紫卡"""
         if len(self.current_data['level']['seedPacks'][enum]['auras'])==0:
             self.current_data['level']['seedPacks'][enum]['auras'].append({"updateTimer": {},"buffs": []})
-
-
     # endregion
 
     # region level_buff
@@ -696,7 +694,6 @@ class Blueprint_Editor:
         self.help_btn = tk.Button(self.btn_frame, text="?", command=self.open_help_window)
         self.help_btn.grid(row=1, column=6, sticky="ew", padx=(0,64))
 
-
     def _setup_blueprint(self):
         while(len(self.blueprint_btn_list)>0):
             self.del_btn_blueprint(0)
@@ -719,7 +716,7 @@ class Blueprint_Editor:
         self.blueprint_btn_list[enum][1].destroy()
         del self.blueprint_btn_list[enum]
 
-    # endreigon
+    # endregion
     # region 响应回调
     def add_blueprint(self):
         self.data_handler.add_seedPack()
@@ -784,10 +781,11 @@ class Blueprint_Editor:
             self.change_recharge_time_input.config(tk.DISABLED)
 
     def remove_buff(self):
-        pass
-
-    def remove_buff_help(self):
-        pass
+        for i in range(len(self.blueprint_btn_list)):
+            var, btn=self.blueprint_btn_list[i]
+            if (var.get()):
+                self.data_handler.remove_seedPack_buff(i)
+        self.remove_buff_btn.config(state=tk.DISABLED)
 
     def open_help_window(self):
         Window.BlurpeintHelpWindow(self.frame)
@@ -795,7 +793,8 @@ class Blueprint_Editor:
     # region 刷新
     def toggle_blueprint(self, enum):
         _, enum_btn = self.blueprint_btn_list[enum]
-        i=0
+        tog_count=0
+        had_buff=False
         self.toggled=0
         for k in range(len(self.blueprint_btn_list)):
             var, btn=self.blueprint_btn_list[k]
@@ -803,21 +802,26 @@ class Blueprint_Editor:
                 var.set(not var.get())
             if (var.get()):
                 self.toggled=k
-                i+=1
+                tog_count+=1
+                if (self.data_handler.get_seedPack_buff_length(k) != 0):
+                    had_buff=True
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
-        if (i>1):
+        if had_buff:
+            self.remove_buff_btn.config(state=tk.NORMAL)
+        else:
+            self.remove_buff_btn.config(state=tk.DISABLED)
+        if (tog_count>1):
             self.refresh_component(False)
-        elif (i==1):
+        elif (tog_count==1):
             self.refresh_component(True, self.toggled)
-        elif (i==0):
+        elif (tog_count==0):
             self.change_blueprint_btn.config(state=tk.DISABLED)
             self.change_cost_input.config(state=tk.DISABLED)
             self.change_recharge_time_input.config(state=tk.DISABLED)
             self.del_blueprint_btn.config(state=tk.DISABLED)
             self.remove_buff_btn.config(state=tk.DISABLED)
             self.change_recharge_id_box.config(state=tk.DISABLED)
-        print(self.toggled)
 
     def refresh(self):
         self.add_blueprint_btn.config(state=tk.NORMAL)
@@ -826,7 +830,6 @@ class Blueprint_Editor:
     def refresh_component(self, single:bool, enum:int = 0):
         self.change_blueprint_btn.config(state=tk.NORMAL)
         self.del_blueprint_btn.config(state=tk.NORMAL)
-        self.remove_buff_btn.config(state=tk.NORMAL)
         if single:
             self.refresh_box()
             speed = self.data_handler.get_seedPack_rechargeSpeed(enum)

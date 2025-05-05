@@ -32,7 +32,7 @@ _recharge_name_zh = ['高', '中', '低', '无']
 _recharge_name_en = ['high', 'medium', 'low', 'none']
 _recharge_id = ['mvz2:very_long', 'mvz2:long', 'mvz2:short', 'mvz2:none']
 
-_text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 by QoZnoS', 'en': 'MVZ2SaveModifier v3.-5 by QoZnoS'
+_text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-4 by QoZnoS', 'en': 'MVZ2SaveModifier v3.-5 by QoZnoS'
     }, 'False':                             {'zh': '否', 'en': 'False'
     }, 'True':                              {'zh': '是', 'en': 'True'
     }, 'btn_add':                           {'zh': '添加', 'en': 'Add'
