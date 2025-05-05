@@ -341,3 +341,22 @@ class HelpWindow:
         """打开外部链接"""
         webbrowser.open_new(url)
 
+class BlurpeintHelpWindow:
+    def __init__(self, parent):
+        self.window = tk.Toplevel(parent)
+        self.window.title("About")
+        self.window.geometry("600x400")
+        
+        container = ttk.Frame(self.window)
+        container.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+        
+        text_content = get_text('help_blueprint_1') + get_text('help_blueprint_2') + get_text('help_blueprint_3') + get_text('help_blueprint_4')
+
+        lbl_info = ttk.Label(
+            container,
+            text=text_content,
+            justify="center",
+            wraplength=600
+        )
+        lbl_info.pack(pady=10)
+

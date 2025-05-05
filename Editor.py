@@ -680,7 +680,7 @@ class Blueprint_Editor:
         self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12)
         self.change_cost_input = add_input(self.btn_frame, get_text("label_cost"), 1, 0, self.master.register(self.change_cost))
         self.change_recharge_time_input = add_input(self.btn_frame, get_text("label_recharge_time"), 1, 1, self.master.register(self.change_recharge_time))
-        self.change_charge_id_box = add_box(self.btn_frame, get_text("label_rechargeLevel"), 1, 2, NameData.recharges.name_list, self.change_recharge_id)
+        self.change_recharge_id_box = add_box(self.btn_frame, get_text("label_rechargeLevel"), 1, 2, NameData.recharges.name_list, self.change_recharge_id)
         self.remove_buff_btn = tk.Button(self.btn_frame, text=get_text("btn_remove_buff"), command=self.remove_buff, width=24, state=tk.DISABLED)
         self.remove_buff_btn.grid(row=2, column=3, sticky="ew", pady=12)
         self.help_btn = tk.Button(self.btn_frame, text="?", command=self.open_help_window)
@@ -766,20 +766,7 @@ class Blueprint_Editor:
         pass
 
     def open_help_window(self):
-        pass
-
-    def bind_mousewheel(self, event):
-        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
-
-    def unbind_mousewheel(self, event):
-        self.canvas.unbind_all("<MouseWheel>")
-
-    def on_mousewheel(self, event):
-        if event.delta > 0:
-            self.canvas.xview_scroll(-3, "units")
-        elif event.delta < 0:
-            self.canvas.xview_scroll(3, "units")
-
+        Window.BlurpeintHelpWindow(self.frame)
     # endregion
     # region 刷新
     def toggle_blueprint(self, enum):
@@ -805,7 +792,7 @@ class Blueprint_Editor:
             self.change_recharge_time_input.config(state=tk.DISABLED)
             self.del_blueprint_btn.config(state=tk.DISABLED)
             self.remove_buff_btn.config(state=tk.DISABLED)
-            self.change_charge_id_box.config(state=tk.DISABLED)
+            self.change_recharge_id_box.config(state=tk.DISABLED)
 
     def refresh(self):
         self.add_blueprint_btn.config(state=tk.NORMAL)
@@ -826,7 +813,7 @@ class Blueprint_Editor:
             self.change_cost_input.config(state=tk.DISABLED)
             self.refresh_input(self.change_recharge_time_input)
             self.change_recharge_time_input.config(state=tk.DISABLED)
-            self.change_charge_id_box.config(state=tk.DISABLED)
+            self.change_recharge_id_box.config(state=tk.DISABLED)
 
     def refresh_input(self, input:ttk.Entry, get=None):
         if input not in self.vars:
@@ -840,7 +827,24 @@ class Blueprint_Editor:
         input.config(state="normal")
 
     def refresh_box(self):
-        pass
+        get = NameData.recharges.get_name(self.data_handler.get_seedPack_rechargeId(self.toggled))
+        if (get != None):
+            self.change_recharge_id_box.set(get)
+        else:
+            self.change_recharge_id_box.set(get_text("default"))
+        self.change_recharge_id_box.config(state="readonly")
+
+    def bind_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
+
+    def unbind_mousewheel(self, event):
+        self.canvas.unbind_all("<MouseWheel>")
+
+    def on_mousewheel(self, event):
+        if event.delta > 0:
+            self.canvas.xview_scroll(-3, "units")
+        elif event.delta < 0:
+            self.canvas.xview_scroll(3, "units")
 
     # endregion
 
