@@ -370,7 +370,7 @@ class DataHandler:
 
     def get_seedPack_rechargeSpeed(self, enum):
         try:
-            return float(self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]["_t"])-0.00000000001
+            return float(self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]["_v"])-0.00000000001
         except:
             return None
 
@@ -648,6 +648,15 @@ class Blueprint_Editor:
         self.blueprint_btn_list = []
         self.empty_img = tk.PhotoImage(width=86, height=90)  # 透明占位图
 
+        self.recharge_speeds = {
+            'mvz2:very_long':50, 
+            'mvz2:long':30, 
+            'mvz2:short':7.5, 
+            'mvz2:none':None,
+            'default':None,
+            None:None
+        }
+
         self._setup_ui()
 
     # region UI
@@ -677,14 +686,16 @@ class Blueprint_Editor:
         self.add_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_add_blueprint"), command=self.add_blueprint, width=24, state=tk.DISABLED)
         self.add_blueprint_btn.grid(row=0, column=3, sticky="ew", pady=12)
         self.del_blueprint_btn = tk.Button(self.btn_frame, text=get_text("btn_delete_blueprint"), command=self.del_blueprint, width=24, state=tk.DISABLED)
-        self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12)
+        self.del_blueprint_btn.grid(row=0, column=5, sticky="ew", pady=12, padx=(64, 0))
         self.change_cost_input = add_input(self.btn_frame, get_text("label_cost"), 1, 0, self.master.register(self.change_cost))
         self.change_recharge_time_input = add_input(self.btn_frame, get_text("label_recharge_time"), 1, 1, self.master.register(self.change_recharge_time))
-        self.change_recharge_id_box = add_box(self.btn_frame, get_text("label_rechargeLevel"), 1, 2, NameData.recharges.name_list, self.change_recharge_id)
+        # self.change_recharge_id_box = add_box(self.btn_frame, get_text("label_rechargeLevel"), 1, 2, NameData.recharges.name_list, self.change_recharge_id)
+        self.change_recharge_id_box = ttk.Combobox(self.btn_frame, values=NameData.recharges.name_list) # 暂时隐藏
         self.remove_buff_btn = tk.Button(self.btn_frame, text=get_text("btn_remove_buff"), command=self.remove_buff, width=24, state=tk.DISABLED)
-        self.remove_buff_btn.grid(row=2, column=3, sticky="ew", pady=12)
+        self.remove_buff_btn.grid(row=1, column=5, sticky="ew", pady=12, padx=(64, 0))
         self.help_btn = tk.Button(self.btn_frame, text="?", command=self.open_help_window)
-        self.help_btn.grid(row=2, column=4, sticky="ew", padx=(0,64))
+        self.help_btn.grid(row=1, column=6, sticky="ew", padx=(0,64))
+
 
     def _setup_blueprint(self):
         while(len(self.blueprint_btn_list)>0):
@@ -724,15 +735,22 @@ class Blueprint_Editor:
             btn.config(command=lambda enum=enum:self.toggle_blueprint(enum))
 
     def change_recharge_time(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        rechargeId = NameData.recharges.get_id(self.change_recharge_id_box.get())
+        if (rechargeId == None):
+            self.data_handler.set_seedPack_rechargeId(self.toggled, "mvz2:long")
+            self.change_recharge_id_box.set(NameData.recharges.get_name("mvz2:long"))
+            rechargeId = "mvz2:long"
+        recharge_time = self.recharge_speeds[rechargeId]
         if value=="":
             self.data_handler.remove_seedPack_rechargeId(self.toggled)
+            self.refresh_box()
             self.data_handler.remove_seedPack_rechargeSpeed(self.toggled)
             return True
         try:
-            self.data_handler.set_seedPack_rechargeId(self.toggled)
-            self.data_handler.set_seedPack_rechargeSpeed(self.toggled, float(value))
+            speed = recharge_time/float(value)
+            self.data_handler.set_seedPack_rechargeSpeed(self.toggled, float(speed))
             return True
-        except ValueError:
+        except :
             return False
 
     def change_cost(self, action, index, value, prior_value, text, validation_type, trigger_type):
@@ -750,14 +768,20 @@ class Blueprint_Editor:
 
     def change_blueprint_id(self, seedID):
         enum = 0
+        single = 0
         for var, btn in self.blueprint_btn_list:
             if (var.get()):
                 btn.config(image=NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID, "zh")))
                 self.data_handler.set_seedID_by_enum(enum, seedID)
+                single += 1
             enum += 1
+        self.refresh_component((single==1), self.toggled)
 
     def change_recharge_id(self, event):
-        pass
+        var = self.change_recharge_id_box.get()
+        self.data_handler.set_seedPack_rechargeId(self.toggled, NameData.recharges.get_id(var))
+        if (var == NameData.recharges.get_name("mvz2:none")):
+            self.change_recharge_time_input.config(tk.DISABLED)
 
     def remove_buff(self):
         pass
@@ -793,6 +817,7 @@ class Blueprint_Editor:
             self.del_blueprint_btn.config(state=tk.DISABLED)
             self.remove_buff_btn.config(state=tk.DISABLED)
             self.change_recharge_id_box.config(state=tk.DISABLED)
+        print(self.toggled)
 
     def refresh(self):
         self.add_blueprint_btn.config(state=tk.NORMAL)
@@ -803,11 +828,21 @@ class Blueprint_Editor:
         self.del_blueprint_btn.config(state=tk.NORMAL)
         self.remove_buff_btn.config(state=tk.NORMAL)
         if single:
-            speed=self.data_handler.get_seedPack_rechargeSpeed(enum)
-            self.refresh_input(self.change_recharge_time_input, speed)
+            self.refresh_box()
+            speed = self.data_handler.get_seedPack_rechargeSpeed(enum)
+            recharge_time = self.recharge_speeds[NameData.recharges.get_id(self.change_recharge_id_box.get())]
+            time = ''
+            if (recharge_time == None):
+                self.change_recharge_time_input.config(state=tk.DISABLED)
+            elif (speed != None):
+                time = recharge_time/speed
+            self.refresh_input(self.change_recharge_time_input, time)
             cost=self.data_handler.get_seedPack_cost(enum)
             self.refresh_input(self.change_cost_input, cost)
-            self.refresh_box()
+            if (self.data_handler.get_seedPacks()[self.toggled] == None):
+                self.change_cost_input.config(state=tk.DISABLED)
+                self.change_recharge_time_input.config(state=tk.DISABLED)
+                self.change_recharge_id_box.config(state=tk.DISABLED)
         else:
             self.refresh_input(self.change_cost_input)
             self.change_cost_input.config(state=tk.DISABLED)
@@ -845,7 +880,6 @@ class Blueprint_Editor:
             self.canvas.xview_scroll(-3, "units")
         elif event.delta < 0:
             self.canvas.xview_scroll(3, "units")
-
     # endregion
 
 class Numeric_Editor:
