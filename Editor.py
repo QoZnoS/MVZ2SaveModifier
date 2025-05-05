@@ -938,7 +938,9 @@ class Numeric_Editor:
             if not isSpecial:
                 self.stageDefinitionID_box.config(values=NameData.levels.name_list)
                 self.stageDefinitionID_box.set(NameData.levels.name_list[0])
-            self.data_handler.set_stageDefinitionID(NameData.levels.get_id(level))
+                self.data_handler.set_stageDefinitionID(NameData.levels.id_list[0])
+            else:
+                self.data_handler.set_stageDefinitionID(NameData.levels.get_id(level))
     
     def change_flag(self, action, index, value, prior_value, text, validation_type, trigger_type):
         """旗数"""
