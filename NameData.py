@@ -28,6 +28,10 @@ _gird_name_zh = ['草地', '水路', '木板']
 _gird_name_en = ['grass', 'water', 'wood']
 _grid_id = ["mvz2:grass", "mvz2:water", "mvz2:wood"]
 
+_recharge_name_zh = ['高', '中', '低', '无']
+_recharge_name_en = ['high', 'medium', 'low', 'none']
+_recharge_id = ['mvz2:very_long', 'mvz2:long', 'mvz2:short', 'mvz2:none']
+
 _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 by QoZnoS', 'en': 'MVZ2SaveModifier v3.-5 by QoZnoS'
     }, 'False':                             {'zh': '否', 'en': 'False'
     }, 'True':                              {'zh': '是', 'en': 'True'
@@ -47,6 +51,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 b
     }, 'btn_unzip':                         {'zh': '解压 (.dat/.lvl → .json)', 'en': 'Decompress(.dat/.lvl → .json)'
     }, 'btn_zip':                           {'zh': '压缩 (.json → .lvl)', 'en': 'Compress(.json → .lvl)'
     }, 'check_enemyPool':                   {'zh': '启用固定出怪', 'en':'Enable Given Spawn'
+    }, 'default':                           {'zh': '默认值', 'en':'Default'
     }, 'help_1':                            {'zh': '声明：使用该软件造成的文件损坏，作者本人一概不负责\n', 'en':'Disclaimer: The author is not responsible for any file damage caused by the use of this software.\n'
     }, 'help_2':                            {'zh': '改修改器不支持直接修改游戏进程，仅支持修改退出关卡时保存的关卡存档文件\n', 'en':'The editor does not support directly modifying the game process, but only supports modifying the level archive file saved when exiting the level..\n'
     }, 'help_3':                            {'zh': '这意味着你需要进入关卡，并且中途退出，才能在选择存档界面看到你的存档\n', 'en':'This means you need to enter the level and exit midway to see your save file on the save file selection interface.\n'
@@ -76,7 +81,8 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 b
     }, 'label_maxStarshard':                {'zh': '星之碎片槽：', 'en': 'maxStarshard: '
     }, 'label_musicID':                     {'zh': '背景音乐：', 'en': 'BGM: '
     }, 'label_pickaxeActive':               {'zh': '启用镐子', 'en': 'pickaxeEnable'
-    }, 'label_recharge_time':               {'zh': '冷却时长：', 'en': 'Blueprint recharge time: '
+    }, 'label_recharge_time':               {'zh': '冷却时长：', 'en': 'Recharge time: '
+    }, 'label_rechargeLevel':               {'zh': '冷却等级：', 'en': 'Recharge level: '
     }, 'label_rechargeSpeed':               {'zh': '蓝图无冷却', 'en': 'Cancel blueprint recharge'
     }, 'label_starshard':                   {'zh': '星之碎片数：', 'en': 'Starshard: '
     }, 'label_starshardActive':             {'zh': '启用星之碎片', 'en': 'starshardEnable'
@@ -350,6 +356,7 @@ blueprints = BilingualDataset(_blueprint_id, _blueprint_name_zh, _blueprint_name
 musics = BilingualDataset(_musics_id, _musics_name_zh, _musics_name_en)
 difficultys = BilingualDataset(_difficulty_id, _difficulty_name_zh, _difficulty_name_en)
 grids = BilingualDataset(_grid_id, _gird_name_zh, _gird_name_en)
+recharges = BilingualDataset(_recharge_id, _recharge_name_zh, _recharge_name_en)
 texts = _TextManager(_text_data)
 
 bools = BilingualDataset([True,False], ["是","否"], ["Yes","No"])
