@@ -660,6 +660,10 @@ class Blueprint_Editor:
         self.canvas.create_window((0, 0), window=self.blueprint_frame, anchor=tk.NW)
         scroll_x = tk.Scrollbar(self.canvas, orient=tk.HORIZONTAL, command=self.canvas.xview)
         scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
+        self.canvas.bind("<MouseWheel>", self.on_mousewheel)
+        self.blueprint_frame.bind("<Enter>", self.bind_mousewheel)
+        self.blueprint_frame.bind("<Leave>", self.unbind_mousewheel)
+
 
         self.ui = tk.Frame(self.frame)
         self.ui.pack(side=tk.TOP)
@@ -763,6 +767,19 @@ class Blueprint_Editor:
 
     def open_help_window(self):
         pass
+
+    def bind_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
+
+    def unbind_mousewheel(self, event):
+        self.canvas.unbind_all("<MouseWheel>")
+
+    def on_mousewheel(self, event):
+        if event.delta > 0:
+            self.canvas.xview_scroll(-3, "units")
+        elif event.delta < 0:
+            self.canvas.xview_scroll(3, "units")
+
     # endregion
     # region 刷新
     def toggle_blueprint(self, enum):
