@@ -803,8 +803,9 @@ class Blueprint_Editor:
             if (var.get()):
                 self.toggled=k
                 tog_count+=1
-                if (self.data_handler.get_seedPack_buff_length(k) != 0):
-                    had_buff=True
+                if (self.data_handler.get_seedPacks()[k]!=None):
+                    if (self.data_handler.get_seedPack_buff_length(k) != 0):
+                        had_buff=True
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
         if had_buff:
