@@ -62,6 +62,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-5 b
     }, 'help_blueprint_2':                  {'zh': '冷却等级决定灵魂熔炉收取的能量\n', 'en':'Recharge level determines the amount of energy collected by the Soul Furnace\n'
     }, 'help_blueprint_3':                  {'zh': 'buff会对蓝图消耗和冷却时间产生额外影响\n', 'en':'The buff will have an additional effect on blueprint cost and Recharge time\n'
     }, 'help_blueprint_4':                  {'zh': '若无特殊需求，建议清除所有buff\n', 'en':'If there is no special need, it is recommended to clear all buffs\n'
+    }, 'help_blueprint_5':                  {'zh': '输入框留空则恢复默认值\n', 'en':'If the input box is left blank, the default value will be restored.\n'
     }, 'help_link1':                        {'zh': '游戏作者主页', 'en':'Game author homepage'
     }, 'help_link2':                        {'zh': '修改器作者主页', 'en':'Modifier Author Home Page'
     }, 'help_link3':                        {'zh': '修改器源码', 'en':'Modifier Github Page'

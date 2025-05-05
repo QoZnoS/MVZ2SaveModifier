@@ -350,7 +350,7 @@ class BlurpeintHelpWindow:
         container = ttk.Frame(self.window)
         container.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
         
-        text_content = get_text('help_blueprint_1') + get_text('help_blueprint_2') + get_text('help_blueprint_3') + get_text('help_blueprint_4')
+        text_content = get_text('help_blueprint_1') + get_text('help_blueprint_2') + get_text('help_blueprint_3') + get_text('help_blueprint_4') + get_text('help_blueprint_5')
 
         lbl_info = ttk.Label(
             container,
