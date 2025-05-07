@@ -1109,7 +1109,7 @@ class Numeric_Editor:
             if (NameData.levels.id_list.count(stageDefinitionID)!=0):
                 self.stageDefinitionID_box.config(values=NameData.levels.name_list)
                 self.stageDefinitionID_box.set(NameData.levels.get_name(stageDefinitionID))
-                self.stageDefinition_box.set("another")
+                self.stageDefinition_box.set(NameData.maps.get_name("another"))
             else:
                 self.stageDefinition_box.set(NameData.maps.get_name(stageDefinitionID.split("_")[0]))
                 self.stageDefinitionID_box.set(stageDefinitionID.split("_")[1])
