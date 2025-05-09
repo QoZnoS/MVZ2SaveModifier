@@ -333,6 +333,12 @@ class DataHandler:
                 seedID_list.append(None)
         return seedID_list
     
+    def get_seedID_by_enum(self, enum):
+        try:
+            return str(self.current_data['level']['seedPacks'][enum]['seedID'])
+        except:
+            return None
+
     def set_seedID_by_enum(self, enum, seedID):
         """修改 seedID 若为 null 则替换为新 seedPack 同时修改 classicBlueprint"""
         try:
@@ -390,7 +396,10 @@ class DataHandler:
         del self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"]
 
     def get_seedPack_buff_length(self, enum):
-        return len(self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"])
+        try:
+            return len(self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"])
+        except:
+            return None
 
     def remove_seedPack_buff(self, enum):
         self.current_data['level']['seedPacks'][enum]["buffs"]["buffs"].clear()
@@ -792,22 +801,38 @@ class Blueprint_Editor:
     # endregion
     # region 刷新
     def toggle_blueprint(self, enum):
-        _, enum_btn = self.blueprint_btn_list[enum]
+        enum_var, enum_btn = self.blueprint_btn_list[enum]
         tog_count=0
         had_buff=False
         self.toggled=0
-        for k in range(len(self.blueprint_btn_list)):
-            var, btn=self.blueprint_btn_list[k]
-            if (btn == enum_btn):
-                var.set(not var.get())
+        for i in range(len(self.blueprint_btn_list)):
+            var, btn=self.blueprint_btn_list[i]
+            if (i == enum):
+                if (var.get() and self.data_handler.get_seedID_by_enum(i) == None):
+                    self.open_blueprint_selector()
+                elif (var.get()):
+                    pass
+                else:
+                    var.set(not var.get())
             if (var.get()):
-                self.toggled=k
+                self.toggled=i
                 tog_count+=1
-                if (self.data_handler.get_seedPacks()[k]!=None):
-                    if (self.data_handler.get_seedPack_buff_length(k) != 0):
-                        had_buff=True
+                if (bool(self.data_handler.get_seedPack_buff_length(i))):
+                    had_buff=True
             color = "lightgreen" if var.get() else "white"
             btn.config(bg=color)
+
+        if (enum_var.get() and tog_count > 1 and self.data_handler.get_seedID_by_enum(enum) != None):
+            tog_count = 0
+            self.toggled = enum
+            had_buff = bool(self.data_handler.get_seedPack_buff_length(enum))
+            for var, btn in self.blueprint_btn_list:
+                if (btn == enum_btn):
+                    continue
+                var.set(False)
+                color = "lightgreen" if var.get() else "white"
+                btn.config(bg=color)
+
         if had_buff:
             self.remove_buff_btn.config(state=tk.NORMAL)
         else:
@@ -843,7 +868,7 @@ class Blueprint_Editor:
             self.refresh_input(self.change_recharge_time_input, time)
             cost=self.data_handler.get_seedPack_cost(enum)
             self.refresh_input(self.change_cost_input, cost)
-            if (self.data_handler.get_seedPacks()[self.toggled] == None):
+            if (self.data_handler.get_seedID_by_enum(self.toggled) == None):
                 self.change_cost_input.config(state=tk.DISABLED)
                 self.change_recharge_time_input.config(state=tk.DISABLED)
                 self.change_recharge_id_box.config(state=tk.DISABLED)
