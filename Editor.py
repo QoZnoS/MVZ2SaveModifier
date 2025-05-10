@@ -805,33 +805,37 @@ class Blueprint_Editor:
         tog_count=0
         had_buff=False
         self.toggled=0
+
+        # 单击已选中空卡槽进选卡
+        if (enum_var.get() and self.data_handler.get_seedID_by_enum(enum) == None):
+            self.open_blueprint_selector()
+            return
+
+        # 统计已选中卡槽数
+        for var, btn in self.blueprint_btn_list:
+            if var.get():
+                tog_count += 1
+
+        # 多选状态点击已选中卡槽进单选        
+        if (enum_var.get() and tog_count > 1):
+            for var, btn in self.blueprint_btn_list:
+                if (btn == enum_btn):
+                    continue
+                var.set(False)
+        else:
+            enum_var.set(not enum_var.get())
+
+        # 更新按钮状态
+        tog_count = 0
         for i in range(len(self.blueprint_btn_list)):
             var, btn=self.blueprint_btn_list[i]
-            if (i == enum):
-                if (var.get() and self.data_handler.get_seedID_by_enum(i) == None):
-                    self.open_blueprint_selector()
-                elif (var.get()):
-                    pass
-                else:
-                    var.set(not var.get())
+            color = "lightgreen" if var.get() else "white"
+            btn.config(bg=color)
             if (var.get()):
                 self.toggled=i
                 tog_count+=1
                 if (bool(self.data_handler.get_seedPack_buff_length(i))):
                     had_buff=True
-            color = "lightgreen" if var.get() else "white"
-            btn.config(bg=color)
-
-        if (enum_var.get() and tog_count > 1 and self.data_handler.get_seedID_by_enum(enum) != None):
-            tog_count = 0
-            self.toggled = enum
-            had_buff = bool(self.data_handler.get_seedPack_buff_length(enum))
-            for var, btn in self.blueprint_btn_list:
-                if (btn == enum_btn):
-                    continue
-                var.set(False)
-                color = "lightgreen" if var.get() else "white"
-                btn.config(bg=color)
 
         if had_buff:
             self.remove_buff_btn.config(state=tk.NORMAL)
