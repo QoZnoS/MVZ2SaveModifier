@@ -769,10 +769,15 @@ class Blueprint_Editor:
         except ValueError:
             return False
 
-    def open_blueprint_selector(self):
-        Window.BlueprintSelector(self.ui, self.change_blueprint_id)
+    def open_blueprint_selector(self, enum = None):
+        Window.BlueprintSelector(self.ui, self.change_blueprint_id, enum)
 
-    def change_blueprint_id(self, seedID):
+    def change_blueprint_id(self, seedID, enum):
+        if (enum != None):
+            var, btn = self.blueprint_btn_list[enum]
+            btn.config(image=NameData.assets.get_blueprint(NameData.blueprints.get_name(seedID, "zh")))
+            self.data_handler.set_seedID_by_enum(enum, seedID)
+            return
         enum = 0
         single = 0
         for var, btn in self.blueprint_btn_list:
@@ -808,7 +813,7 @@ class Blueprint_Editor:
 
         # 单击已选中空卡槽进选卡
         if (enum_var.get() and self.data_handler.get_seedID_by_enum(enum) == None):
-            self.open_blueprint_selector()
+            self.open_blueprint_selector(enum)
             return
 
         # 统计已选中卡槽数

@@ -146,10 +146,11 @@ class UserSelector(tk.Toplevel):
         self.destroy()
 
 class BlueprintSelector(tk.Toplevel):
-    def __init__(self, parent, on_select):
+    def __init__(self, parent, on_select, enum):
         super().__init__(parent)
         self.parent = parent
         self.on_select = on_select
+        self.enum = enum
 
         # 窗口设置
         self.title("Selector Blueprint")
@@ -281,14 +282,13 @@ class BlueprintSelector(tk.Toplevel):
             btn.config(bg=color)
 
     def confirm_selection(self):
-        # 原有逻辑保持不变
         selected = None
         for var, btn, seedID, _ in self.btn_list:
             if var.get():
                 selected = NameData.blueprints.get_id(seedID)
         if not selected:
             return
-        self.on_select(selected)
+        self.on_select(selected, self.enum)
         self.destroy()
 
 # 关于
