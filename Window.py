@@ -145,7 +145,7 @@ class UserSelector(tk.Toplevel):
         self.on_select(selected_user)
         self.destroy()
 
-class BlueprintSelector(tk.Toplevel):
+class _ObjectSelector(tk.Toplevel):
     def __init__(self, parent, on_select, enum):
         super().__init__(parent)
         self.parent = parent
@@ -153,7 +153,6 @@ class BlueprintSelector(tk.Toplevel):
         self.enum = enum
 
         # 窗口设置
-        self.title("Selector Blueprint")
         self.geometry(_window_size)
         self.resizable(True, True)
         self.transient(parent)
@@ -167,14 +166,10 @@ class BlueprintSelector(tk.Toplevel):
         self.canvas = tk.Canvas(main_container)
         self.scrollbar = ttk.Scrollbar(main_container, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas)
-        
-        # 关键修复：同步Canvas和滚动区域的宽度
-        self.canvas.bind("<Configure>", 
-            lambda e: self.scrollable_frame.config(width=e.width-20))  # 留出滚动条宽度
+        self.canvas.bind("<Configure>", lambda e: self.scrollable_frame.config(width=e.width-20))
 
         # 配置Canvas
-        self.scrollable_frame.bind("<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+        self.scrollable_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
         self.canvas.create_window((0,0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
@@ -182,14 +177,15 @@ class BlueprintSelector(tk.Toplevel):
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.canvas.bind("<MouseWheel>", self.on_mousewheel)
-        self.scrollable_frame.bind("<Enter>", self.bind_mousewheel)
-        self.scrollable_frame.bind("<Leave>", self.unbind_mousewheel)
+        self.canvas.bind("<MouseWheel>", self._on_mousewheel)
+        self.scrollable_frame.bind("<Enter>", self._bind_mousewheel)
+        self.scrollable_frame.bind("<Leave>", self._unbind_mousewheel)
+
         # 底部操作按钮（独立于滚动区域）
         self.btn_frame = ttk.Frame(self)
         self.btn_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=5, pady=5)
-        self.seed_text = tk.Label(self.btn_frame)
-        self.seed_text.pack(side=tk.LEFT)
+        self.status_text = tk.Label(self.btn_frame)
+        self.status_text.pack(side=tk.LEFT)
         ttk.Button(self.btn_frame, text="取消/Cancel", command=self.destroy).pack(side=tk.RIGHT, padx=3)
         ttk.Button(self.btn_frame, text="选择/Choose", command=self.confirm_selection).pack(side=tk.RIGHT, padx=3)
 
@@ -206,38 +202,35 @@ class BlueprintSelector(tk.Toplevel):
         # 初始布局
         self.setup_btn()
 
-    def bind_mousewheel(self, event):
-        self.canvas.bind_all("<MouseWheel>", self.on_mousewheel)
+    def _bind_mousewheel(self, event):
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
-    def unbind_mousewheel(self, event):
+    def _unbind_mousewheel(self, event):
         self.canvas.unbind_all("<MouseWheel>")
 
-    def on_mousewheel(self, event):
+    def _on_mousewheel(self, event):
         """处理滚轮事件"""
-        # Windows/MacOS
         if event.delta > 0:
             self.canvas.yview_scroll(-3, "units")
         elif event.delta < 0:
             self.canvas.yview_scroll(3, "units")
 
     def create_btn_list(self):
-        for idx, seedID in enumerate(NameData.blueprints.zh_names):
+        for idx, imgName in enumerate(self.img_name):
             var = tk.BooleanVar()
             btn = tk.Button(self.btn_container, bg="white", 
                           command=lambda e=idx: self.toggle_btn(e))
-            img = NameData.assets.get_blueprint(seedID)
-            btn.config(image=img, width=85, height=85, compound=tk.CENTER)
+            img = self.get_img_func(imgName)
+            btn.config(image=img, width=self.btn_size, height=self.btn_size, compound=tk.CENTER)
             
-            self.btn_list.append((var, btn, seedID, idx))
+            self.btn_list.append((var, btn, self.object_data.get_id(imgName), idx))
 
     def setup_btn(self):
-        # 强制更新布局获取真实宽度
         self.update_idletasks()
         container_width = self.winfo_width()
         
         # 计算列数（最小1列）
-        btn_size = 85
-        columns = max(1, container_width // (btn_size + 5)) if container_width > 10 else 1
+        columns = max(1, container_width // (self.btn_size + 5)) if container_width > 10 else 1
 
         for _, btn, _, idx in self.btn_list:
             row, col = divmod(idx, columns)
@@ -264,18 +257,19 @@ class BlueprintSelector(tk.Toplevel):
         self.last_size = (new_width, new_height)
         _window_size = str(new_width) + "x" + str(new_height)
 
+        self.status_text.config(text=get_text('status_resize_selector'))
         self.setup_btn()
 
     def toggle_btn(self, enum):
         _, enum_btn, _, _ = self.btn_list[enum]
-        for var, btn, seedID, _ in self.btn_list:
+        for var, btn, objectId, _ in self.btn_list:
             if btn == enum_btn:
                 if var.get():
                     self.confirm_selection()
                     return
                 else:
                     var.set(True)
-                    self.seed_text.config(text=NameData.blueprints.get_name(NameData.blueprints.get_id(seedID)))
+                    self.status_text.config(text=self.object_data.get_name(objectId))
             else:
                 var.set(False)
             color = "lightgreen" if var.get() else "white"
@@ -283,13 +277,33 @@ class BlueprintSelector(tk.Toplevel):
 
     def confirm_selection(self):
         selected = None
-        for var, btn, seedID, _ in self.btn_list:
+        for var, btn, objectId, _ in self.btn_list:
             if var.get():
-                selected = NameData.blueprints.get_id(seedID)
+                selected = objectId
         if not selected:
             return
         self.on_select(selected, self.enum)
         self.destroy()
+
+class BlueprintSelector(_ObjectSelector):
+    def __init__(self, parent, on_select, enum):
+        self.btn_size = 85
+        self.object_data = NameData.blueprints
+        self.img_name = NameData.blueprints.zh_names
+        self.get_img_func = NameData.assets.get_blueprint
+
+        super().__init__(parent, on_select, enum)
+        self.title("Selector Blueprint")
+
+class ArtifactSelector(_ObjectSelector):
+    def __init__(self, parent, on_select, enum):
+        self.btn_size = 64
+        self.object_data = NameData.artifacts
+        self.img_name = NameData.artifacts.en_names
+        self.get_img_func = NameData.assets.get_artifact
+
+        super().__init__(parent, on_select, enum)
+        self.title("Selector Artifact")
 
 # 关于
 class HelpWindow:
