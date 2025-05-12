@@ -87,6 +87,7 @@ _text_data = { 'title':                      {'zh': 'MVZ2存档修改器 v3.-4 b
     }, 'label_musicID':                     {'zh': '背景音乐：', 'en': 'BGM: '
     }, 'label_pickaxeActive':               {'zh': '启用镐子', 'en': 'pickaxeEnable'
     }, 'label_recharge_time':               {'zh': '冷却时长：', 'en': 'Recharge time: '
+    }, 'label_recharge_time_done':          {'zh': '已冷却时长：', 'en': 'Recharging time: '
     }, 'label_rechargeLevel':               {'zh': '冷却等级：', 'en': 'Recharge level: '
     }, 'label_rechargeSpeed':               {'zh': '蓝图无冷却', 'en': 'Cancel blueprint recharge'
     }, 'label_starshard':                   {'zh': '星之碎片数：', 'en': 'Starshard: '
