@@ -753,10 +753,12 @@ class Blueprint_Editor:
             self.data_handler.remove_seedPack_rechargeSpeed(self.toggled)
             return True
         try:
-            speed = recharge_time/float(value)
+            time = 0.0000001 if float(value)==0 else float(value)
+            speed = recharge_time/time
             self.data_handler.set_seedPack_rechargeSpeed(self.toggled, float(speed))
             return True
         except :
+            print(value)
             return False
 
     def change_cost(self, action, index, value, prior_value, text, validation_type, trigger_type):
@@ -869,11 +871,11 @@ class Blueprint_Editor:
             self.refresh_box()
             speed = self.data_handler.get_seedPack_rechargeSpeed(enum)
             recharge_time = self.recharge_speeds[NameData.recharges.get_id(self.change_recharge_id_box.get())]
-            time = ''
+            time = None
             if (recharge_time == None):
                 self.change_recharge_time_input.config(state=tk.DISABLED)
             elif (speed != None):
-                time = recharge_time/speed
+                time = 0 if recharge_time/speed==0.0000001 else recharge_time/speed
             self.refresh_input(self.change_recharge_time_input, time)
             cost=self.data_handler.get_seedPack_cost(enum)
             self.refresh_input(self.change_cost_input, cost)
