@@ -49,11 +49,12 @@ class ArchiveEditor:
 
         self.page = []
         page = [('page_Numeric_Editor', Editor.Numeric_Editor), 
-                ('page_Artifact_Blueprint_Editor', Editor.Artifact_Blueprint_Editor), 
+                # ('page_Artifact_Blueprint_Editor', Editor.Artifact_Blueprint_Editor), 
                 ('page_Blueprint_Editor', Editor.Blueprint_Editor), 
                 ('page_Artifact_Editor', Editor.Artifact_Editor), 
                 ('page_Grids_Editor', Editor.Grids_Editor), 
-                ('page_EnemyPool_Editor', Editor.EnemyPool_Editor)]
+                ('page_EnemyPool_Editor', Editor.EnemyPool_Editor)
+                ]
         for lbl,cls in page:
             new_page = cls(self.archive, self.datahandler)
             self.archive.add(new_page.frame, text = get_text(lbl))
@@ -180,7 +181,7 @@ class ArchiveEditor:
             page.refresh()
 
 if __name__ == "__main__":
-    # messagebox.showinfo("免责声明",f"使用该软件造成的文件损坏，本人一概不负责")
+    messagebox.showinfo("免责声明",f"该版本只适配了内测版和iz相关的内容，只保证能用")
     root = tk.Tk()
     app = ArchiveEditor(root)
     NameData.assets._load_resources()

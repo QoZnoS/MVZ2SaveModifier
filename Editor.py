@@ -175,15 +175,15 @@ class DataHandler:
             return None
 
     def set_rechargeSpeed(self, value:float):
-        self.current_data['level']['rechargeSpeed'] = float(value)
+        self.current_data['level']['properties']['mvz2:level/rechargeSpeed'] = {"_t": "System.Single","_v": float(value)}
 
     def get_rechargeSpeed(self, default:float = None):
         try:
-            return float(self.current_data['level']['rechargeSpeed'])
+            return float(self.current_data['level']['properties']['mvz2:level/rechargeSpeed']["_v"])
         except:
             if default != None:
                 return float(default)
-            self.missing_log.append(get_text('info_missing_param') + 'rechargeSpeed')
+            self.missing_log.append(get_text('info_missing_param') + 'mvz2:level/rechargeSpeed')
             self.missing = True
             return None
 
@@ -360,28 +360,28 @@ class DataHandler:
         del self.current_data['parts'][0]['classicBlueprints'][enum]
 
     def set_seedPack_cost(self, enum, cost):
-        self.current_data['level']['seedPacks'][enum]["properties"]["cost"] = float(cost)
+        self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/cost"] = {"_t": "System.Single","_v": float(cost)}
 
     def get_seedPack_cost(self, enum):
         try:
-            return self.current_data['level']['seedPacks'][enum]["properties"]["cost"]
+            return float(self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/cost"]["_v"])
         except:
             return None
 
     def remove_seedPack_cost(self, enum):
-        del self.current_data['level']['seedPacks'][enum]["properties"]["cost"]
+        del self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/cost"]
 
     def set_seedPack_rechargeSpeed(self, enum, speed):
-        self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"] = {"_t": "System.Single","_v": str(float(speed)+0.0000000000000001)}
+        self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/rechargeSpeed"] = {"_t": "System.Single","_v": str(float(speed)+0.0000000000000001)}
 
     def get_seedPack_rechargeSpeed(self, enum):
         try:
-            return float(self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]["_v"])-0.0000000000000001
+            return float(self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/rechargeSpeed"]["_v"])-0.0000000000000001
         except:
             return None
 
     def remove_seedPack_rechargeSpeed(self, enum):
-        del self.current_data['level']['seedPacks'][enum]["properties"]["rechargeSpeed"]
+        del self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/rechargeSpeed"]
 
     def set_seedPack_rechargeId(self, enum, Id):
         self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"] = {"_t": "PVZEngine.NamespaceID","_v": Id}
@@ -396,11 +396,11 @@ class DataHandler:
         del self.current_data['level']['seedPacks'][enum]["properties"]["rechargeId"]
 
     def set_seedPack_recharge(self, enum, time):
-        self.current_data['level']['seedPacks'][enum]["properties"]["recharge"] = {"_t": "System.Single","_v": float(time)}
+        self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/recharge"] = {"_t": "System.Single","_v": float(time)}
 
     def get_seedPack_recharge(self, enum):
         try:
-            return float(self.current_data['level']['seedPacks'][enum]["properties"]["recharge"]["_v"])
+            return float(self.current_data['level']['seedPacks'][enum]["properties"]["mvz2:seed/recharge"]["_v"])
         except:
             return None
 
@@ -513,22 +513,40 @@ class DataHandler:
     def get_enemyPool(self):
         """返回出怪种类列表"""
         try:
-            return list(self.current_data['level']['properties']['enemyPool']['_v'])
+            return list(self.current_data['level']['properties']['mvz2:level/enemyPool']['_v'])
         except:
             return None
     
     def set_enemyPool(self, pool:list):
         """替换出怪种类列表"""
-        self.current_data['level']['properties']['enemyPool']['_v'] = list(pool)
+        self.current_data['level']['properties']['mvz2:level/enemyPool']['_v'] = list(pool)
 
     def fix_enemyPool(self):
         """不存在出怪列表时添加出怪列表"""
-        self.current_data['level']['properties']['enemyPool'] = {
+        self.current_data['level']['properties']['mvz2:level/enemyPool'] = {
                 "_t": "PVZEngine.NamespaceID[], PVZEngine.Base",
                 "_v": []}
         
     def del_enemyPool(self):
-        return (self.current_data['level']['properties'].pop('enemyPool'))["_v"]
+        return (self.current_data['level']['properties'].pop('mvz2:level/enemyPool'))["_v"]
+    # endregion
+
+    # region entity
+    def get_level_entities(self):
+        return list(self.current_data['level']['entities'])
+    # endregion
+
+    # region i_zombie
+    def get_redLine_lane(self):
+        for entity in self.get_level_entities():
+            if(entity['definitionID'] == "mvz2:redline"):
+                return int((entity['position'][0]-260)/80)
+            
+    def set_redLine_lane(self, lane):
+        for entity in self.get_level_entities():
+            if(entity['definitionID'] == "mvz2:redline"):
+                entity['previousPosition'][0] = float(260+80*lane)
+                entity['position'][0] = float(260+80*lane)
     # endregion
 
     def check_missing(self):
@@ -1001,6 +1019,8 @@ class Numeric_Editor:
         self.starshardActive_check      =add_check(frame_group,get_text("label_starshardActive")    , 3, 3, self.change_starshardActive)                            # 启用星之碎片
         self.triggerActive_check        =add_check(frame_group,get_text("label_triggerActive")      , 4, 3, self.change_triggerActive)                              # 启用驱动
 
+        self.redLine_input              =add_input(frame_group,get_text('label_redLine_position')   , 5, 0, self.master.register(self.change_redLine))
+
         # tk.Button(frame_group, text=get_text("btn_about"),command=self.open_about).grid(row=4,column=6,ipadx=48)
 
     # region 响应回调
@@ -1155,6 +1175,15 @@ class Numeric_Editor:
         """启用驱动"""
         var = self.vars[self.triggerActive_check].get()
         self.data_handler.set_triggerActive(var)
+
+    def change_redLine(self, action, index, value, prior_value, text, validation_type, trigger_type):
+        if value=="":
+            value=1
+        try:
+            self.data_handler.set_redLine_lane(int(value))
+            return True
+        except ValueError:
+            return False
     # endregion
 
     # region 刷新，读取参数
@@ -1165,13 +1194,13 @@ class Numeric_Editor:
         self.refresh_input( self.energy_input,              self.data_handler.get_energy())
         self.refresh_input( self.maxEnergy_input,           self.data_handler.get_maxEnergy())
         self.refresh_input( self.starshardCount_input,      self.data_handler.get_starshardCount(0))
-        self.refresh_input( self.starshardSlotCount_input,  self.data_handler.get_starshardSlotCount())
+        self.refresh_input( self.starshardSlotCount_input,  self.data_handler.get_starshardSlotCount(0))
         self.refresh_check( self.isConveyorMode_check,      self.data_handler.get_isConveyorMode())
         self.refresh_input( self.conveyorSlotCount_input,   self.data_handler.get_conveyorSlotCount())
         self.refresh_box(   self.musicID_box,               self.data_handler.get_musicID(), NameData.musics)
         self.refresh_box(   self.difficulty_box,            self.data_handler.get_difficulty(), NameData.difficultys)
         self.refresh_check( self.autoCollect_check,         self.data_handler.get_autoCollect(False))
-        self.refresh_check( self.rechargeSpeed_check,       (self.data_handler.get_rechargeSpeed() != 1.0))
+        self.refresh_check( self.rechargeSpeed_check,       (self.data_handler.get_rechargeSpeed(1.0) != 1.0))
         self.refresh_check( self.ignoreHugeWaveEvent_check, self.data_handler.get_ignoreHugeWaveEvent(False))
         self.refresh_check( self.energyActive_check,        self.data_handler.get_energyActive(False))
         self.refresh_check( self.blueprintsActive_check,    self.data_handler.get_blueprintsActive(False))
@@ -1179,10 +1208,13 @@ class Numeric_Editor:
         self.refresh_check( self.starshardActive_check,     self.data_handler.get_starshardActive(False))
         self.refresh_check( self.triggerActive_check,       self.data_handler.get_triggerActive(False))
 
+        self.refresh_input( self.redLine_input,             self.data_handler.get_redLine_lane())
+
         self.data_handler.check_missing()
 
     def refresh_map_box(self):
-        stageDefinitionID = self.data_handler.get_stageDefinitionID()
+        # stageDefinitionID = self.data_handler.get_stageDefinitionID()
+        stageDefinitionID = "mvz2:debug"
         if stageDefinitionID == None:
             return
         try:
