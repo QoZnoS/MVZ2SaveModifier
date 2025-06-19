@@ -181,7 +181,6 @@ class ArchiveEditor:
             page.refresh()
 
 if __name__ == "__main__":
-    messagebox.showinfo("免责声明",f"该版本只适配了内测版和iz相关的内容，只保证能用")
     root = tk.Tk()
     app = ArchiveEditor(root)
     NameData.assets._load_resources()
